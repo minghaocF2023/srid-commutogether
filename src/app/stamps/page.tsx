@@ -5,7 +5,8 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import React from "react";
 import Image from "next/image";
-import { Button, Divider, Paper } from "@mui/material";
+import { Divider, Paper } from "@mui/material";
+import StyledLink from "@/components/StyledLink";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -47,13 +48,11 @@ const Stamps = () => {
     <div className="w-full p-4">
       <div className="flex justify-between items-end mb-5">
         <h1 className="text-2xl">Stamp Collection</h1>
-        <Button
-          sx={{ paddingY: "5px" }}
-          className="text-white"
-          variant="contained"
-        >
-          New Stamp
-        </Button>
+        <StyledLink
+          text="New Stamp"
+          href={"/stamps/collect"}
+          styleType="primary"
+        />
       </div>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -69,10 +68,6 @@ const Stamps = () => {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <span className="mb-2">Mountain View</span>
-        <Stamp />
-        <Stamp />
-        <Stamp />
-
         <Divider className="my-5" />
         <span className="mb-2">Mountain View</span>
         <Stamp />
