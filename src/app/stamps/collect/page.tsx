@@ -81,6 +81,7 @@ const Collect = () => {
               Stamp Collected!
             </div>
             <StyledLink
+              className="w-full"
               variant="contained"
               text="Back to Stamp"
               styleType="primary"
@@ -110,10 +111,11 @@ const Collect = () => {
                 width={350}
                 height={350}
               />
-              <p className="text-center text-slate-500 h-[12rem]">
+              <p className="text-center text-slate-500">
                 {data[location].intro}
               </p>
               <StyledButton
+                className="w-full"
                 onClick={handleCollect}
                 text="Collect Stamp"
                 variant="contained"
@@ -134,6 +136,7 @@ const Collect = () => {
                   pathname: "/stamps/collect",
                   query: { location: "mtv" },
                 }}
+                className="w-full"
                 text="Simulate Tapping at MTV station"
                 variant="contained"
                 styleType="primary"
