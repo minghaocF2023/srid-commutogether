@@ -56,7 +56,7 @@ function CustomTabPanel(props: TabPanelProps) {
   return (
     <div
       role="tabpanel"
-      className="overflow-y-auto mb-10"
+      className="overflow-y-scroll max-h-full mb-10"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -91,7 +91,7 @@ const Stamps = () => {
   };
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full h-screen p-4 pb-14">
       <div className="flex justify-between items-end mb-5">
         <h1 className="text-2xl">Stamp Collection</h1>
         <StyledLink
