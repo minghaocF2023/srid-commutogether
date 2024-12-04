@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { ThemeProvider } from "@mui/material/styles";
 import Theme from "@/theme/default/Theme";
+import CustomHead from "@/components/CustomHead";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/logo.png" />
-      </head>
+      <CustomHead />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
