@@ -4,6 +4,9 @@ const nextConfig = {
     domains: [],
     unoptimized: true,
   },
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 }
 
 module.exports = nextConfig 
