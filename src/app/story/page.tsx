@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Camera, CameraType } from "react-camera-pro";
 import StyledButton from "@/components/StyledButton";
 import { useSearchParams } from "next/navigation";
@@ -50,54 +50,56 @@ const StoryPage = () => {
   };
 
   return (
-    <div className="w-full h-screen relative">
-      {image ? (
-        <img
-          src={image}
-          alt="Captured"
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <Camera
-          ref={camera}
-          facingMode="environment"
-          // @ts-ignore
-          className="w-full h-full object-cover"
-        />
-      )}
-
-      {/* Button Container */}
-      <div className="absolute bottom-16 w-full flex justify-center">
+    <Suspense>
+      <div className="w-full h-screen relative">
         {image ? (
-          <>
-            {/* Retake Photo Button */}
-            <StyledButton
-              text="Retake Photo"
-              onClick={() => setImage(null)}
-              styleType="primary"
-              variant="contained"
-              className="mr-2"
-            />
-            {/* Post Story Button */}
-            <StyledButton
-              text="Post Story"
-              onClick={postStory}
-              styleType="secondary"
-              variant="contained"
-              className="ml-2"
-            />
-          </>
+          <img
+            src={image}
+            alt="Captured"
+            className="w-full h-full object-cover"
+          />
         ) : (
-          /* Take Photo Button */
-          <StyledButton
-            text="Take Photo"
-            onClick={takePhoto}
-            styleType="primary"
-            variant="contained"
+          <Camera
+            ref={camera}
+            facingMode="environment"
+            // @ts-ignore
+            className="w-full h-full object-cover"
           />
         )}
+
+        {/* Button Container */}
+        <div className="absolute bottom-16 w-full flex justify-center">
+          {image ? (
+            <>
+              {/* Retake Photo Button */}
+              <StyledButton
+                text="Retake Photo"
+                onClick={() => setImage(null)}
+                styleType="primary"
+                variant="contained"
+                className="mr-2"
+              />
+              {/* Post Story Button */}
+              <StyledButton
+                text="Post Story"
+                onClick={postStory}
+                styleType="secondary"
+                variant="contained"
+                className="ml-2"
+              />
+            </>
+          ) : (
+            /* Take Photo Button */
+            <StyledButton
+              text="Take Photo"
+              onClick={takePhoto}
+              styleType="primary"
+              variant="contained"
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 

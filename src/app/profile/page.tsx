@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import StyledButton from "@/components/StyledButton";
 import { useSearchParams, useRouter, notFound } from "next/navigation";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-
+import { Suspense } from "react";
 type UserData = {
   name: string;
   email: string;
@@ -97,175 +97,181 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen p-4 pb-16">
-      <div className="flex justify-between items-end mb-5">
-        <h1 className="text-2xl">Profile</h1>
-        {editableData.self && !edit && (
-          <StyledButton
-            text="Settings"
-            onClick={() => setEdit(true)}
-            styleType="primary"
-          />
-        )}
-      </div>
-
-      <div className="flex justify-stretch mb-4 h-[120px]">
-        <Avatar
-          alt={editableData.name}
-          src={editableData.avatar}
-          sx={{ width: 120, height: 120 }}
-        />
-        <div className="flex flex-col justify-start m-5">
-          <Typography variant="h5">
-            {editableData.name} {edit && "✎"}
-          </Typography>
-          <Typography variant="subtitle1" className="text-slate-500">
-            {editableData.email}
-          </Typography>
-          {editableData.self ? (
-            edit && (
-              <StyledButton
-                text="Change Profile"
-                onClick={handleUnimplemented}
-                styleType="primary"
-              />
-            )
-          ) : userId === 1 && !requestAccepted && !requestDeclined ? (
-            <Box>
-              <StyledButton
-                className="me-2"
-                text="Accept"
-                onClick={handleAcceptRequest}
-                styleType="primary"
-              />
-              <StyledButton
-                className="me-2"
-                text="Decline"
-                onClick={handleDeclineRequest}
-                styleType="secondary"
-              />
-            </Box>
-          ) : userId === 1 && requestAccepted ? (
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="flex flex-col w-full h-screen p-4 pb-16">
+        <div className="flex justify-between items-end mb-5">
+          <h1 className="text-2xl">Profile</h1>
+          {editableData.self && !edit && (
             <StyledButton
-              onClick={() => {}}
-              className="me-2"
-              text="Friend"
-              styleType="secondary"
-              disabled={true}
+              text="Settings"
+              onClick={() => setEdit(true)}
+              styleType="primary"
             />
-          ) : edit ? (
-            <>
-              <TextField
-                value={editableData.name}
-                onChange={(e) => handleChange("name", e.target.value)}
-                variant="standard"
-                className="mb-2"
-              />
-              <TextField
-                value={editableData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                variant="standard"
-                className="mb-2"
-                type="email"
-                placeholder="Enter your email"
-              />
-            </>
-          ) : (
-            editableData.self && (
-              <>
-                <Typography variant="h5">{editableData.name}</Typography>
-                <Typography variant="subtitle1" className="text-slate-500">
-                  {editableData.email}
-                </Typography>
-              </>
-            )
           )}
-          {!editableData.self && userId !== 1 && (
-            <Box>
-              {requestSent ? (
+        </div>
+
+        <div className="flex justify-stretch mb-4 h-[120px]">
+          <Avatar
+            alt={editableData.name}
+            src={editableData.avatar}
+            sx={{ width: 120, height: 120 }}
+          />
+          <div className="flex flex-col justify-start m-5">
+            <Typography variant="h5">
+              {editableData.name} {edit && "✎"}
+            </Typography>
+            <Typography variant="subtitle1" className="text-slate-500">
+              {editableData.email}
+            </Typography>
+            {editableData.self ? (
+              edit && (
                 <StyledButton
-                  text="Requested"
-                  onClick={() => {}}
-                  styleType="secondary"
-                  className="me-2"
-                />
-              ) : (
-                <StyledButton
-                  text="Send Request"
-                  onClick={handleSendRequest}
+                  text="Change Profile"
+                  onClick={handleUnimplemented}
                   styleType="primary"
-                  className="me-2"
                 />
-              )}
-              <PersonAddAltIcon />
-            </Box>
+              )
+            ) : userId === 1 && !requestAccepted && !requestDeclined ? (
+              <Box>
+                <StyledButton
+                  className="me-2"
+                  text="Accept"
+                  onClick={handleAcceptRequest}
+                  styleType="primary"
+                />
+                <StyledButton
+                  className="me-2"
+                  text="Decline"
+                  onClick={handleDeclineRequest}
+                  styleType="secondary"
+                />
+              </Box>
+            ) : userId === 1 && requestAccepted ? (
+              <StyledButton
+                onClick={() => {}}
+                className="me-2"
+                text="Friend"
+                styleType="secondary"
+                disabled={true}
+              />
+            ) : edit ? (
+              <>
+                <TextField
+                  value={editableData.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                  variant="standard"
+                  className="mb-2"
+                />
+                <TextField
+                  value={editableData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  variant="standard"
+                  className="mb-2"
+                  type="email"
+                  placeholder="Enter your email"
+                />
+              </>
+            ) : (
+              editableData.self && (
+                <>
+                  <Typography variant="h5">{editableData.name}</Typography>
+                  <Typography variant="subtitle1" className="text-slate-500">
+                    {editableData.email}
+                  </Typography>
+                </>
+              )
+            )}
+            {!editableData.self && userId !== 1 && (
+              <Box>
+                {requestSent ? (
+                  <StyledButton
+                    text="Requested"
+                    onClick={() => {}}
+                    styleType="secondary"
+                    className="me-2"
+                  />
+                ) : (
+                  <StyledButton
+                    text="Send Request"
+                    onClick={handleSendRequest}
+                    styleType="primary"
+                    className="me-2"
+                  />
+                )}
+                <PersonAddAltIcon />
+              </Box>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col justify-stretch pb-4">
+          <Typography variant="subtitle1">Bio</Typography>
+          {edit ? (
+            <TextField
+              value={editableData.bio}
+              onChange={(e) => handleChange("bio", e.target.value)}
+              multiline
+              rows={3}
+              fullWidth
+              className="mt-2"
+            />
+          ) : (
+            <Alert icon={false} severity="info">
+              {editableData.bio}
+            </Alert>
           )}
         </div>
-      </div>
 
-      <div className="flex flex-col justify-stretch pb-4">
-        <Typography variant="subtitle1">Bio</Typography>
-        {edit ? (
-          <TextField
-            value={editableData.bio}
-            onChange={(e) => handleChange("bio", e.target.value)}
-            multiline
-            rows={3}
-            fullWidth
-            className="mt-2"
-          />
-        ) : (
-          <Alert icon={false} severity="info">
-            {editableData.bio}
-          </Alert>
-        )}
-      </div>
-
-      <div className="flex h-max justify-between">
-        <Typography variant="subtitle1">Public Album</Typography>
-      </div>
-      <div className="flex-1 overflow-y-auto mb-4">
-        <ImageList cols={3} rowHeight={164}>
-          {itemData.map((item) => (
-            <ImageListItem key={item.img}>
-              <img
-                srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                alt={item.title}
-                loading="lazy"
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
-      </div>
-
-      {edit ? (
-        <div className="flex justify-between">
-          <StyledButton
-            text="Cancel"
-            styleType="secondary"
-            onClick={() => {
-              setEditableData({ ...usersData[userId] }); // Reset changes
-              setEdit(false);
-            }}
-          />
-          <StyledButton text="Save" styleType="primary" onClick={handleSave} />
+        <div className="flex h-max justify-between">
+          <Typography variant="subtitle1">Public Album</Typography>
         </div>
-      ) : (
-        <StyledButton
-          text="Back"
-          styleType="secondary"
-          onClick={() => router.back()}
-        />
-      )}
+        <div className="flex-1 overflow-y-auto mb-4">
+          <ImageList cols={3} rowHeight={164}>
+            {itemData.map((item) => (
+              <ImageListItem key={item.img}>
+                <img
+                  srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                  src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                  alt={item.title}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
+        </div>
 
-      <Snackbar
-        open={open}
-        autoHideDuration={2000}
-        onClose={() => handleClose}
-        message={edit ? "Not implemented" : "Changes saved successfully"}
-      />
-    </div>
+        {edit ? (
+          <div className="flex justify-between">
+            <StyledButton
+              text="Cancel"
+              styleType="secondary"
+              onClick={() => {
+                setEditableData({ ...usersData[userId] }); // Reset changes
+                setEdit(false);
+              }}
+            />
+            <StyledButton
+              text="Save"
+              styleType="primary"
+              onClick={handleSave}
+            />
+          </div>
+        ) : (
+          <StyledButton
+            text="Back"
+            styleType="secondary"
+            onClick={() => router.back()}
+          />
+        )}
+
+        <Snackbar
+          open={open}
+          autoHideDuration={2000}
+          onClose={() => handleClose}
+          message={edit ? "Not implemented" : "Changes saved successfully"}
+        />
+      </div>
+    </Suspense>
   );
 };
 

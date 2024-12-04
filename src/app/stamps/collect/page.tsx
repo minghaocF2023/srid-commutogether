@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import StyledButton from "@/components/StyledButton";
 import useLocalStorage from "@/hook/useLocalStorage";
 import { LocationData, SocialData } from "@/types/stamps";
-
+import { Suspense } from "react";
 const data: { [key: string]: LocationData } = {
   mtv: {
     name: "Mountain View",
@@ -71,7 +71,7 @@ const Collect = () => {
   };
 
   return (
-    <>
+    <Suspense>
       {collected ? (
         <div className="p-4 w-full h-full">
           <div className="flex flex-col gap-5 mt-10 items-center justify-center">
@@ -150,7 +150,7 @@ const Collect = () => {
           )}
         </div>
       )}
-    </>
+    </Suspense>
   );
 };
 
