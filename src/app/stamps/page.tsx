@@ -58,6 +58,36 @@ const socialStampData: { [key: string]: SocialData } = {
   },
 };
 
+const transStampData: { [key: string]: SocialData } = {
+  train: {
+    name: "Train",
+    stampImage: "/stamps/train.png",
+    image: "/stamps/train.png",
+    description: "You took a train!",
+    timestamp: "2024-10-10",
+    collected: false,
+    count: 0,
+  },
+  bus: {
+    name: "Bus",
+    stampImage: "/stamps/bus.png",
+    image: "/stamps/bus.png",
+    description: "You took a bus!",
+    timestamp: "2024-11-10",
+    collected: false,
+    count: 0,
+  },
+  metro: {
+    name: "Metro",
+    stampImage: "/stamps/metro.png",
+    image: "/stamps/metro.png",
+    description: "You took a metro!",
+    timestamp: "2024-11-10",
+    collected: false,
+    count: 0,
+  },
+};
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -92,6 +122,7 @@ const Stamps = () => {
   const [value, setValue] = useState(0);
   const [stampData] = useLocalStorage("stampData", data);
   const [socialData] = useLocalStorage("socialStampData", socialStampData);
+  const [transData] = useLocalStorage("transStampData", transStampData);
   const router = useRouter();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -157,28 +188,33 @@ const Stamps = () => {
         <div className="h-[100px]"></div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        {Object.keys(stampData).map((location) => (
-          <Paper className="mb-3" key={location}>
+        {Object.keys(transData).map((key) => (
+          <Paper className="mb-3" key={key}>
             <div className="flex justify-between items-center">
               <div
-                onClick={() => handleView(location)}
                 className={`${
-                  stampData[location].collected ? "" : "grayscale"
-                } flex gap-4 items-center relative w-full h-[200px]`}
+                  transData[key].collected ? "" : "grayscale"
+                } flex gap-4 justify-center items-center relative p-4`}
               >
-                <img
-                  className="rounded w-full h-full object-cover"
-                  alt=""
-                  src={stampData[location].image}
-                />
-
                 <Image
-                  className="rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
-                  src={stampData[location].stampImage}
+                  className="rounded-md "
+                  src={transData[key].stampImage}
                   alt=""
-                  width={150}
-                  height={150}
+                  width={100}
+                  height={100}
                 />
+                <div className="flex flex-col">
+                  <div className="text-2xl bold">{transData[key].name}</div>
+                  <div className="text-sm text-slate-500">
+                    {transData[key].description}
+                  </div>
+                  <div className="text-sm text-slate-500">
+                    {transData[key].collected ? transData[key].timestamp : ""}
+                  </div>
+                  <div className="text-sm bg-purple-500 w-fit p-1 text-white rounded mt-2">
+                    You get {transData[key].count} times
+                  </div>
+                </div>
               </div>
             </div>
           </Paper>

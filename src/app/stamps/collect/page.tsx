@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import StyledButton from "@/components/StyledButton";
 import useLocalStorage from "@/hook/useLocalStorage";
-import { LocationData } from "@/types/stamps";
+import { LocationData, SocialData } from "@/types/stamps";
 
 const data: { [key: string]: LocationData } = {
   mtv: {
@@ -38,6 +38,10 @@ const Collect = () => {
   const [collected, setCollected] = useState(false);
   const searchParams = useSearchParams();
   const [, setStampData] = useLocalStorage("stampData", data);
+  const [, setTransData] = useLocalStorage<{ [key: string]: SocialData }>(
+    "transStampData",
+    {}
+  );
 
   useEffect(() => {
     if (searchParams.has("location")) {
@@ -51,6 +55,15 @@ const Collect = () => {
     setStampData((prevData) => {
       const updatedData = { ...prevData };
       updatedData[location!].collected = true;
+      return updatedData;
+    });
+
+    setTransData((prevData) => {
+      const updatedData = { ...prevData };
+      updatedData["train"].collected = true;
+      updatedData["train"].timestamp = new Date().toLocaleString("en-US");
+      updatedData["train"].count += 1;
+
       return updatedData;
     });
 
@@ -129,7 +142,7 @@ const Collect = () => {
                   query: { location: "mtv" },
                 }}
                 className="w-full"
-                text="Simulate Tapping at MTV station"
+                text="Simulate Tapping at MTV Caltrain station"
                 variant="contained"
                 styleType="primary"
               />
