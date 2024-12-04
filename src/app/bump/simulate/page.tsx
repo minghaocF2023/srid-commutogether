@@ -21,48 +21,61 @@ const SimulateBumpPage = () => {
   );
 
   // State for managing bump limits
+  const [bumpLimitWithAlice, setBumpLimitWithAlice] = useState<number>(10);
   const [totalBumpLimit, setTotalBumpLimit] = useState<number>(10);
 
   // State for handling loading state during bump simulation
-  const [isBumping, setIsBumping] = useState<boolean>(true);
+  const [isBumping, setIsBumping] = useState<boolean>(false); // Initially false
 
+  // Function to handle bump simulation
+  const simulateBump = () => {
+    setIsBumping(true);
+    // Simulate a 3-second delay
+    setTimeout(() => {
+      // Increment counts, ensuring they don't exceed current limits
+      setBumpCountWithAlice((prev) => prev + 1);
+      setTotalBumpCount((prev) => prev + 1);
+      setIsBumping(false);
+    }, 3000);
+  };
+
+  // Effect to simulate bump when component mounts
   useEffect(() => {
-    // Function to handle bump simulation
-    const simulateBump = () => {
-      setIsBumping(true);
-      // Simulate a 3-second delay
-      setTimeout(() => {
-        // Increment counts
-        setBumpCountWithAlice(bumpCountWithAlice + 1);
-        setTotalBumpCount(totalBumpCount + 1);
-        setIsBumping(false);
+  }, []); // Run once on mount
 
-        // Check if totalBumpCount has reached the initial limit
-        if (totalBumpCount + 1 >= 10 && totalBumpLimit === 10) {
-          setTotalBumpLimit(50); // Increase the total bump limit
-        }
-      }, 3000);
-    };
+  // Effect to handle bumpCountWithAlice reaching its limit
+  useEffect(() => {
+    if (bumpCountWithAlice >= bumpLimitWithAlice) {
+      // Example: Increase the limit by 10 each time it's reached
+      setBumpLimitWithAlice((prev) => prev + 10);
+    }
+  }, [bumpCountWithAlice, bumpLimitWithAlice]);
 
-    simulateBump();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array ensures this runs once on mount
+  // Effect to handle totalBumpCount reaching its limit
+  useEffect(() => {
+    if (totalBumpCount >= totalBumpLimit) {
+      // Example: Increase the limit by 50 each time it's reached
+      setTotalBumpLimit((prev) => prev + 50);
+    }
+  }, [totalBumpCount, totalBumpLimit]);
 
-  // Determine heart color based on totalBumpLimit
-  const getHeartEmoji = (count: number, limit: number) => {
-    return count >= limit ? "🩶" : "🤎";
+  // Function to get the appropriate heart emoji based on count and limit
+  const getHeartEmoji = (count: number) => {
+    if (count < 10) return "🤎"; // Brown Heart
+    else if (count < 50) return "🩶"; // Light Gray Heart as Silver
+    else return "💛"; // Yellow Heart as Gold
   };
 
   // Ensure that bump counts do not exceed their limits
   useEffect(() => {
-    if (bumpCountWithAlice > 10) {
-      setBumpCountWithAlice(10);
+    if (bumpCountWithAlice > bumpLimitWithAlice) {
+      setBumpCountWithAlice(bumpLimitWithAlice);
     }
     if (totalBumpCount > totalBumpLimit) {
       setTotalBumpCount(totalBumpLimit);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalBumpLimit]);
+  }, [bumpLimitWithAlice, totalBumpLimit]);
 
   return (
     <Box
@@ -75,7 +88,6 @@ const SimulateBumpPage = () => {
       bgcolor="background.default"
       textAlign="center"
     >
-      {/* Fist Bump GIF */}
       <Image
         src="/bump/fist_bump.gif"
         alt="Fist Bump"
@@ -83,7 +95,6 @@ const SimulateBumpPage = () => {
         height={300}
       />
 
-      {/* Loading Indicator */}
       {isBumping ? (
         <>
           <Typography
@@ -114,15 +125,17 @@ const SimulateBumpPage = () => {
           <Box mt={2} mb={4}>
             {/* With Alice Count */}
             <Typography variant="h6" color="text.secondary">
-              With Alice: {bumpCountWithAlice}/10 {getHeartEmoji(bumpCountWithAlice, 10)}
+              With Alice: {bumpCountWithAlice}/{bumpLimitWithAlice}{" "}
+              {getHeartEmoji(bumpCountWithAlice, bumpLimitWithAlice)}
             </Typography>
 
             {/* Total Bump Count */}
             <Typography variant="h6" color="text.secondary" mt={1}>
-              Total BUMP🍻: {totalBumpCount}/{totalBumpLimit} {getHeartEmoji(totalBumpCount, totalBumpLimit)}
+              Total BUMP🍻: {totalBumpCount}/{totalBumpLimit}{" "}
+              {getHeartEmoji(totalBumpCount, totalBumpLimit)}
             </Typography>
           </Box>
-          
+
         </>
       )}
     </Box>
