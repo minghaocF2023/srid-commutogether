@@ -6,6 +6,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import Image from "next/image";
 import useLocalStorage from "@/hook/useLocalStorage";
+import { useRouter } from "next/navigation";
 import StyledButton from "@/components/StyledButton";
 
 type SocialData = {
@@ -20,8 +21,8 @@ type SocialData = {
 
 const SimulateBumpPage = () => {
   // Initialize bump counts from localStorage
-  const [bumpCountWithAlice, setBumpCountWithAlice] = useLocalStorage<number>(
-    "bumpCountWithAlice",
+  const [bumpCountWithSamuel, setBumpCountWithSamuel] = useLocalStorage<number>(
+    "bumpCountWithSamuel",
     0
   );
   const [totalBumpCount, setTotalBumpCount] = useLocalStorage<number>(
@@ -34,12 +35,13 @@ const SimulateBumpPage = () => {
   }>("socialStampData", {});
 
   // State for managing bump limits
-  const [bumpLimitWithAlice, setBumpLimitWithAlice] = useState<number>(10);
+  const [bumpLimitWithSamuel, setBumpLimitWithSamuel] = useState<number>(10);
   const [totalBumpLimit, setTotalBumpLimit] = useState<number>(10);
 
   // State for handling loading state during bump simulation
   const [isBumping, setIsBumping] = useState<boolean>(false); // Initially false
   const hasMounted = useRef(false);
+  const router = useRouter(); 
 
   // Function to handle bump simulation
   const simulateBump = () => {
@@ -47,7 +49,7 @@ const SimulateBumpPage = () => {
     // Simulate a 3-second delay
     setTimeout(() => {
       // Increment counts, ensuring they don't exceed current limits
-      setBumpCountWithAlice((prev) => prev + 1);
+      setBumpCountWithSamuel((prev) => prev + 1);
       setTotalBumpCount((prev) => prev + 1);
       setIsBumping(false);
       setSocialData((prevData) => ({
@@ -71,13 +73,13 @@ const SimulateBumpPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Effect to handle bumpCountWithAlice reaching its limit
+  // Effect to handle bumpCountWithSamuel reaching its limit
   useEffect(() => {
-    if (bumpCountWithAlice >= bumpLimitWithAlice) {
+    if (bumpCountWithSamuel >= bumpLimitWithSamuel) {
       // Example: Increase the limit by 10 each time it's reached
-      setBumpLimitWithAlice((prev) => prev + 10);
+      setBumpLimitWithSamuel((prev) => prev + 10);
     }
-  }, [bumpCountWithAlice, bumpLimitWithAlice]);
+  }, [bumpCountWithSamuel, bumpLimitWithSamuel]);
 
   // Effect to handle totalBumpCount reaching its limit
   useEffect(() => {
@@ -96,14 +98,26 @@ const SimulateBumpPage = () => {
 
   // Ensure that bump counts do not exceed their limits
   useEffect(() => {
-    if (bumpCountWithAlice > bumpLimitWithAlice) {
-      setBumpCountWithAlice(bumpLimitWithAlice);
+    if (bumpCountWithSamuel > bumpLimitWithSamuel) {
+      setBumpCountWithSamuel(bumpLimitWithSamuel);
     }
     if (totalBumpCount > totalBumpLimit) {
       setTotalBumpCount(totalBumpLimit);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bumpLimitWithAlice, totalBumpLimit]);
+  }, [bumpLimitWithSamuel, totalBumpLimit]);
+
+  useEffect(() => {
+    if (!isBumping) {
+      const timer = setTimeout(() => {
+        // 3.1 Redirect to the profile page
+        router.push("/profile?user=1");
+      }, 3000); // 3-second delay
+  
+      // 3.2 Cleanup the timer on unmount or if isBumping changes
+      return () => clearTimeout(timer);
+    }
+  }, [isBumping, router]);
 
   return (
     <Box
@@ -151,10 +165,10 @@ const SimulateBumpPage = () => {
 
           {/* Bump Counts */}
           <Box mt={2} mb={4}>
-            {/* With Alice Count */}
+            {/* With Samuel Count */}
             <Typography variant="h6" color="text.secondary">
-              With Alice: {bumpCountWithAlice}/{bumpLimitWithAlice}{" "}
-              {getHeartEmoji(bumpCountWithAlice)}
+              With Samuel: {bumpCountWithSamuel}/{bumpLimitWithSamuel}{" "}
+              {getHeartEmoji(bumpCountWithSamuel)}
             </Typography>
 
             {/* Total Bump Count */}
@@ -164,14 +178,6 @@ const SimulateBumpPage = () => {
             </Typography>
           </Box>
 
-          {/* Button to Simulate Another Bump */}
-          <StyledButton
-            text="Again"
-            onClick={simulateBump}
-            styleType="primary"
-            variant="contained"
-            className="mt-4"
-          />
         </>
       )}
     </Box>
