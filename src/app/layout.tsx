@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <ThemeProvider theme={Theme}>
           <Header />
-          {children}
+          <div className="max-h-[calc(100vh-80px)]">{children}</div>
         </ThemeProvider>
       </body>
     </html>
