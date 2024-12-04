@@ -3,10 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, CircularProgress, Fab, Typography } from "@mui/material";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import ReplayIcon from "@mui/icons-material/Replay";
+import SendIcon from "@mui/icons-material/Send";
 import { styled } from "@mui/material/styles";
-import Image from "next/image";
+import useLocalStorage from "@/hook/useLocalStorage";
 
-// Styled Components
 const Video = styled("video")({
   width: "100%",
   height: "100vh",
@@ -15,7 +16,7 @@ const Video = styled("video")({
 
 const CaptureButton = styled(Fab)({
   position: "fixed",
-  bottom: "20px",
+  bottom: "80px",
   left: "50%",
   transform: "translateX(-50%)",
   width: "70px",
@@ -32,12 +33,30 @@ const CapturedImage = styled("img")({
   objectFit: "cover",
 });
 
+const FlashOverlay = styled(Box)({
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "white",
+  opacity: 0.5,
+  transition: "opacity 0.2s ease-in-out",
+  zIndex: 2,
+});
+
 const StoryPage = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Using useLocalStorage hook for capturedPhoto
+  const [capturedPhoto, setCapturedPhoto] = useLocalStorage<string>(
+    "capturedPhoto",
+    ""
+  );
+
   const [hasCameraAccess, setHasCameraAccess] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState<boolean>(false);
 
@@ -46,7 +65,7 @@ const StoryPage = () => {
     const getCameraStream = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" }, // Use the rear camera if available
+          video: { facingMode: "environment" },
           audio: false,
         });
         if (videoRef.current) {
@@ -103,7 +122,16 @@ const StoryPage = () => {
 
   // Handle Retake Photo
   const handleRetake = () => {
-    setCapturedPhoto(null);
+    setCapturedPhoto("");
+  };
+
+  // Handle Post Story
+  const handlePostStory = () => {
+    // Implement the logic to post the story
+    // For example, redirect to another page or show a success message
+    alert("Story posted successfully!");
+    // Clear the captured photo after posting
+    setCapturedPhoto("");
   };
 
   return (
@@ -128,9 +156,7 @@ const StoryPage = () => {
       )}
 
       {/* Flash Overlay */}
-      {isFlashing && (
-        <Box className="absolute top-0 left-0 w-full h-full bg-white opacity-50 transition-opacity duration-200"></Box>
-      )}
+      {isFlashing && <FlashOverlay />}
 
       {/* Video Feed */}
       {!isLoading && hasCameraAccess && !capturedPhoto && (
@@ -141,16 +167,50 @@ const StoryPage = () => {
       {capturedPhoto && (
         <Box className="absolute top-0 left-0 w-full h-full">
           <CapturedImage src={capturedPhoto} alt="Captured" />
-          <Box className="absolute bottom-20 left-0 w-full flex justify-center">
-            <Fab
-              variant="extended"
-              color="primary"
-              onClick={handleRetake}
-              className="bg-gray-700 hover:bg-gray-600 text-white"
+          <Box
+            className="absolute bottom-20 left-0 w-full flex justify-center"
+            sx={{ px: 2 }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                width: "100%",
+                maxWidth: 400,
+                justifyContent: "space-between",
+              }}
             >
-              <CameraAltIcon className="mr-2" />
-              Retake
-            </Fab>
+              <Fab
+                variant="extended"
+                color="primary"
+                onClick={handleRetake}
+                sx={{
+                  flexGrow: 1,
+                  backgroundColor: "#4A5568",
+                  "&:hover": {
+                    backgroundColor: "#2D3748",
+                  },
+                }}
+              >
+                <ReplayIcon sx={{ mr: 1 }} />
+                Retake
+              </Fab>
+              <Fab
+                variant="extended"
+                color="secondary"
+                onClick={handlePostStory}
+                sx={{
+                  flexGrow: 1,
+                  backgroundColor: "#38A169",
+                  "&:hover": {
+                    backgroundColor: "#2F855A",
+                  },
+                }}
+              >
+                <SendIcon sx={{ mr: 1 }} />
+                Post Story
+              </Fab>
+            </Box>
           </Box>
         </Box>
       )}
