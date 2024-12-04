@@ -309,7 +309,7 @@ const MapPage = () => {
             onClick={handleStartFakingLocation}
             className="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition"
           >
-            Fake Location
+            Set Location
           </button>
         ) : (
           <>
