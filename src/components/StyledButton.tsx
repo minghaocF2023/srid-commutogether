@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
 
-
 interface StyledButtonProps {
   text: string;
   onClick: () => void;
   styleType: "primary" | "secondary" | "danger" | "success";
   variant?: "contained" | "outlined" | "text";
   className?: string;
+  disabled?: boolean;
 }
 
 const StyledButton = ({
@@ -14,6 +14,7 @@ const StyledButton = ({
   onClick,
   className,
   styleType,
+  disabled = false,
   variant = "contained",
 }: StyledButtonProps) => {
   return (
@@ -22,6 +23,7 @@ const StyledButton = ({
       className={`text-white ${className}`}
       variant={variant}
       color={styleType}
+      disabled={disabled}
       onClick={onClick}
     >
       {text}
