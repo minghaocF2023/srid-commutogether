@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -9,78 +9,96 @@ import { Button, Box, Typography, ImageList, ImageListItem } from '@mui/material
 import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from 'swiper/modules';
+import React, { useState, useEffect } from 'react';
 
 const Home = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const albumId: string | null = searchParams.get('id');
-  let photosData, hasUserStory;
-  for (const album of albums['albums']) {
-    if (album['albumId'] === albumId) {
-      photosData = album['photos'];
-      hasUserStory = album['containsUserUploads'];
-      break;
+  const [photosData, setPhotosData] = useState([]);
+
+  useEffect(() => {
+    let initialPhotos = [];
+    for (const album of albums['albums']) {
+      if (album['albumId'] === albumId) {
+        initialPhotos = album['photos'];
+        break;
+      }
     }
-  }
-  if (!photosData) {
-    notFound();
-  }
+
+    if (!initialPhotos.length) {
+      notFound();
+    }
+
+    // Retrieve user stories from localStorage
+    const existingStories = localStorage.getItem('userStories');
+    const storiesArray = existingStories ? JSON.parse(existingStories) : [];
+
+    // Map user stories to the same format as initialPhotos
+    const userPhotos = storiesArray.map((image: string, index: number) => ({
+      photoId: `user-${index}`,
+      photoUrl: image,
+      location: 'User Upload',
+      isUserUpload: true,
+    }));
+
+    // Combine userPhotos with initialPhotos
+    setPhotosData([...userPhotos, ...initialPhotos]);
+  }, [albumId]);
 
   return (
     <Box className="flex flex-col w-full h-screen p-4 pb-16">
       <Box>
-        <Button onClick={() => router.back()} variant="text" color="inherit">Back To Map</Button>
+        <Button onClick={() => router.back()} variant="text" color="inherit">
+          Back To Map
+        </Button>
       </Box>
       <Box className="flex justify-between">
-        <Typography variant="h4">
-          Mountain View
-        </Typography>
+        <Typography variant="h4">Mountain View</Typography>
         <Link href="/story">
-          <ControlPointIcon fontSize="large"/>
+          <ControlPointIcon fontSize="large" />
         </Link>
       </Box>
-      {hasUserStory && <Box className="flex flex-col" >
-        <Typography variant="h6">
-          My Story
-        </Typography>
-        <Box className="w-full" >
-          <Swiper
-            className='h-[150px]'
-            slidesPerView={2}
-            spaceBetween={10}
-            navigation={true}
-            centeredSlides={true}
-            pagination={{
-              clickable: true,
-            }}
-            modules={[Pagination, Navigation]}
-          >
-            {photosData.map((item) => (item.isUserUpload &&
-              <SwiperSlide key={item.photoId}>
-                <img
-                  src={item.photoUrl}
-                  alt={item.location}
-                  loading="lazy"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+
+      {/* My Story Section */}
+      {photosData.some((item) => item.isUserUpload) && (
+        <Box className="flex flex-col">
+          <Typography variant="h6">My Story</Typography>
+          <Box className="w-full">
+            <Swiper
+              className="h-[150px]"
+              slidesPerView={2}
+              spaceBetween={10}
+              navigation={true}
+              centeredSlides={true}
+              pagination={{ clickable: true }}
+              modules={[Pagination, Navigation]}
+            >
+              {photosData.map(
+                (item) =>
+                  item.isUserUpload && (
+                    <SwiperSlide key={item.photoId}>
+                      <img src={item.photoUrl} alt={item.location} loading="lazy" />
+                    </SwiperSlide>
+                  )
+              )}
+            </Swiper>
+          </Box>
         </Box>
-      </Box>}
-      <Typography variant="h6">
-        Explore
-      </Typography>
+      )}
+
+      {/* Explore Section */}
+      <Typography variant="h6">Explore</Typography>
       <Box className="flex-1 overflow-y-auto">
         <ImageList variant="masonry" cols={2} gap={10}>
-          {photosData.map((item) => (!item.isUserUpload &&
-            <ImageListItem key={item.photoId}>
-              <img
-                src={item.photoUrl}
-                alt={item.location}
-                loading="lazy"
-              />
-            </ImageListItem>
-          ))}
+          {photosData.map(
+            (item) =>
+              !item.isUserUpload && (
+                <ImageListItem key={item.photoId}>
+                  <img src={item.photoUrl} alt={item.location} loading="lazy" />
+                </ImageListItem>
+              )
+          )}
         </ImageList>
       </Box>
     </Box>
@@ -88,4 +106,3 @@ const Home = () => {
 };
 
 export default Home;
-

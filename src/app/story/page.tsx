@@ -17,10 +17,23 @@ const StoryPage = () => {
 
   // Placeholder function for posting the story
   const postStory = () => {
-    // Implement your post story logic here
-    console.log("Story posted!");
-    // Reset the image after posting if needed
+    if (!image) {
+      return;
+    }
+    // Retrieve existing stories from localStorage
+    const existingStories = localStorage.getItem("userStories");
+    let storiesArray = existingStories ? JSON.parse(existingStories) : [];
+
+    // Add the new image
+    storiesArray.push(image);
+
+    // Save back to localStorage
+    localStorage.setItem("userStories", JSON.stringify(storiesArray));
+
+    // Reset the image after posting
     setImage(null);
+
+    console.log("Story posted!");
   };
 
   return (
