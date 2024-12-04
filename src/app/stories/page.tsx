@@ -27,7 +27,7 @@ const Home = () => {
   }
 
   return (
-    <Box className="w-full h-screen p-4 pb-14">
+    <Box className="flex flex-col w-full h-screen p-4 pb-16">
       <Box>
         <Button onClick={() => router.back()} variant="text" color="inherit">Back To Map</Button>
       </Box>
@@ -70,17 +70,19 @@ const Home = () => {
       <Typography variant="h6">
         Explore
       </Typography>
-      <ImageList variant="masonry" cols={2} gap={10}>
-        {photosData.map((item) => (!item.isUserUpload &&
-          <ImageListItem key={item.photoId}>
-            <img
-              src={item.photoUrl}
-              alt={item.location}
-              loading="lazy"
-            />
-          </ImageListItem>
-        ))}
-      </ImageList>
+      <Box className="flex-1 overflow-y-auto">
+        <ImageList variant="masonry" cols={2} gap={10}>
+          {photosData.map((item) => (!item.isUserUpload &&
+            <ImageListItem key={item.photoId}>
+              <img
+                src={item.photoUrl}
+                alt={item.location}
+                loading="lazy"
+              />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      </Box>
     </Box>
   );
 };
