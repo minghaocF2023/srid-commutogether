@@ -35,6 +35,14 @@
           "longitude": -122.16904444444445,
           "location": "Stanford",
           "isUserUpload": false
+        },
+        {
+          "photoId": "f373a9ad-4ebb-4467-aaa1-27ee67140e8d",
+          "photoUrl": "/photos/972da311-c529-463b-b6be-6e006b675c05.jpg",
+          "latitude": 36.63324056539054,
+          "longitude": -66.74115288364094,
+          "location": "Demo Location",
+          "isUserUpload": false
         }
       ],
       "containsUserUploads": true
@@ -66,6 +74,22 @@
           "longitude": -122.08003888888888,
           "location": "Old Mountain View",
           "isUserUpload": false
+        },
+        {
+          "photoId": "1d485d33-f4fd-4c01-9d8a-4db0f7f24881",
+          "photoUrl": "/photos/29fb6a62-88e9-42b6-b236-4b8854f39c0c.jpg",
+          "latitude": 74.6126946435069,
+          "longitude": -44.7179481062943,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "6a523d83-059d-4283-b054-3601878365de",
+          "photoUrl": "/photos/1a81c960-ef3c-41d4-8f4d-c96d51674f30.jpg",
+          "latitude": 72.0153243299732,
+          "longitude": -71.77889151509835,
+          "location": "Demo Location",
+          "isUserUpload": false
         }
       ],
       "containsUserUploads": true
@@ -89,6 +113,30 @@
           "longitude": -122.06773333333334,
           "location": "North Whisman",
           "isUserUpload": false
+        },
+        {
+          "photoId": "ecf395e2-7cdc-4c57-a0d0-40e01da91e3a",
+          "photoUrl": "/photos/a682de44-eada-41eb-97a8-bf7e5ea1f8e3.jpg",
+          "latitude": -61.10179281255545,
+          "longitude": -168.3481765422754,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "0be56d1f-6474-42ca-8dc3-014e500ca183",
+          "photoUrl": "/photos/28c53990-4a4d-40b1-b2d5-8d49807cf2ad.jpg",
+          "latitude": -75.42794171815027,
+          "longitude": -146.24868920598215,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "83dd00ff-1631-4572-90d2-b1d0b771577f",
+          "photoUrl": "/photos/c42f0a0f-db35-410b-97a2-43f08d1fabeb.jpg",
+          "latitude": 50.745092912173334,
+          "longitude": -114.50614504528242,
+          "location": "Demo Location",
+          "isUserUpload": false
         }
       ],
       "containsUserUploads": false
@@ -104,6 +152,38 @@
           "longitude": -122.064225,
           "location": "Cuernavaca",
           "isUserUpload": true
+        },
+        {
+          "photoId": "a90befbf-c261-4a7f-a9a4-b3735e3f18e2",
+          "photoUrl": "/photos/fbf81cd6-3b63-4875-b47c-cf2745ee807a.jpg",
+          "latitude": 63.239756071932504,
+          "longitude": 56.54092988546458,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "279eec95-640b-4378-81ae-1fc2d12f7816",
+          "photoUrl": "/photos/5afcd713-1c18-4b28-85b1-9afd0fe93630.jpg",
+          "latitude": 24.77286039899687,
+          "longitude": -79.39405021346161,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "e16a99fb-669b-47f1-8986-fb70b2cd844b",
+          "photoUrl": "/photos/89f1565c-deb4-4fea-99ec-b73bb7cfe632.jpg",
+          "latitude": 87.12806508887422,
+          "longitude": -78.25396344885156,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "77122196-a051-494d-87c3-fbd98e19dfa4",
+          "photoUrl": "/photos/16a5c574-4acd-4c49-af01-b51871d192b9.jpg",
+          "latitude": -23.593142468684476,
+          "longitude": 89.35157971462411,
+          "location": "Demo Location",
+          "isUserUpload": false
         }
       ],
       "containsUserUploads": true
@@ -119,6 +199,38 @@
           "longitude": -122.39701111111111,
           "location": "Financial District",
           "isUserUpload": false
+        },
+        {
+          "photoId": "751dcd27-6a81-47bd-8f9d-6515e1491f2c",
+          "photoUrl": "/photos/653452f7-8a30-416b-9060-eb025877292e.jpg",
+          "latitude": -22.513251741048805,
+          "longitude": -23.967396053705414,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "4c91bbf4-31be-4922-a2e3-5b97c5b8fae5",
+          "photoUrl": "/photos/c2bb9c14-586c-4e3c-913e-64afc11523f6.jpg",
+          "latitude": 47.263137245266506,
+          "longitude": -6.2908924377487665,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "467058c1-cc72-48cc-953d-ced942014666",
+          "photoUrl": "/photos/9574df9b-a39e-4e38-bddc-e773d8babed7.jpg",
+          "latitude": 83.5667385637235,
+          "longitude": -21.912863044512733,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "f48cddd6-0f8b-4fd7-ba0f-682370ae6284",
+          "photoUrl": "/photos/f7ef7aea-df9d-4e81-a4dd-1259c35acf13.jpg",
+          "latitude": 17.86046150516262,
+          "longitude": -102.16383589419577,
+          "location": "Demo Location",
+          "isUserUpload": false
         }
       ],
       "containsUserUploads": false
@@ -133,6 +245,38 @@
           "latitude": 37.414325,
           "longitude": -122.07710277777777,
           "location": "North Bayshore",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "ac26fb50-9356-4fc1-b972-930b06be1f81",
+          "photoUrl": "/photos/39b001a0-2864-4a7e-8ff3-6a490af2c332.jpg",
+          "latitude": -82.55140334089344,
+          "longitude": -172.7877529558111,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "312ac8aa-4ec0-4d73-813d-50159734f0dd",
+          "photoUrl": "/photos/d063bb94-b30c-445d-a33e-5b63c1e4adb9.jpg",
+          "latitude": -55.43904758342768,
+          "longitude": -13.145577854156585,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "f5201ed7-f435-41b1-940e-44b93b4aed43",
+          "photoUrl": "/photos/f6438ff7-b2a4-4e37-ac8e-048e1d184ee0.jpg",
+          "latitude": -74.40922541385294,
+          "longitude": 102.20581757890898,
+          "location": "Demo Location",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "a56125ad-3d08-44d6-9300-ef8736970ab8",
+          "photoUrl": "/photos/5d8d9a1e-02a9-4a59-bba0-c95475715b93.jpg",
+          "latitude": -48.49038560532394,
+          "longitude": -101.09634278566077,
+          "location": "Demo Location",
           "isUserUpload": false
         }
       ],
