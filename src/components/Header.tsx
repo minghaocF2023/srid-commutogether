@@ -77,6 +77,7 @@ const Header = () => {
                 </div>
               </IconButton>
             </Link>
+            <Link href="/story"></Link>
           </div>
         </div>
       </Toolbar>
