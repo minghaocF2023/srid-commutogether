@@ -25,6 +25,7 @@ type SocialData = {
   description: string;
   timestamp: string;
   collected: boolean;
+  count: number;
 };
 
 const data: { [key: string]: LocationData } = {
@@ -61,14 +62,16 @@ const socialStampData: { [key: string]: SocialData } = {
     description: "You bumped with friends!",
     timestamp: "2024-10-10",
     collected: false,
+    count: 0,
   },
   bd: {
     name: "Birthday",
-    stampImage: "/stamps/bump.png",
+    stampImage: "/stamps/birthday.png",
     image: "/stamps/friends.png",
     description: "Happy Birthday!",
     timestamp: "2024-11-10",
     collected: false,
+    count: 0,
   },
 };
 
@@ -206,7 +209,6 @@ const Stamps = () => {
           <Paper className="mb-3" key={key}>
             <div className="flex justify-between items-center">
               <div
-                onClick={() => handleView(key)}
                 className={`${
                   socialData[key].collected ? "" : "grayscale"
                 } flex gap-4 justify-center items-center relative p-4`}
@@ -220,6 +222,15 @@ const Stamps = () => {
                 />
                 <div className="flex flex-col">
                   <div className="text-2xl bold">{socialData[key].name}</div>
+                  <div className="text-sm text-slate-500">
+                    {socialData[key].description}
+                  </div>
+                  <div className="text-sm text-slate-500">
+                    {socialData[key].collected ? socialData[key].timestamp : ""}
+                  </div>
+                  <div className="text-sm bg-purple-500 w-fit p-1 text-white rounded mt-2">
+                    You get {socialData[key].count} times
+                  </div>
                 </div>
               </div>
             </div>

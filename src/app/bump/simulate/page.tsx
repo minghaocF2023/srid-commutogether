@@ -6,8 +6,17 @@ import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import Image from "next/image";
 import useLocalStorage from "@/hook/useLocalStorage";
-import Link from "next/link";
 import StyledButton from "@/components/StyledButton";
+
+type SocialData = {
+  name: string;
+  stampImage: string;
+  image: string;
+  description: string;
+  timestamp: string;
+  collected: boolean;
+  count: number;
+};
 
 const SimulateBumpPage = () => {
   // Initialize bump counts from localStorage
@@ -19,6 +28,10 @@ const SimulateBumpPage = () => {
     "totalBumpCount",
     0
   );
+
+  const [, setSocialData] = useLocalStorage<{
+    [key: string]: SocialData;
+  }>("socialStampData", {});
 
   // State for managing bump limits
   const [bumpLimitWithAlice, setBumpLimitWithAlice] = useState<number>(10);
@@ -37,6 +50,15 @@ const SimulateBumpPage = () => {
       setBumpCountWithAlice((prev) => prev + 1);
       setTotalBumpCount((prev) => prev + 1);
       setIsBumping(false);
+      setSocialData((prevData) => ({
+        ...prevData,
+        bf: {
+          ...prevData.bf,
+          collected: true,
+          timestamp: new Date().toLocaleString("en-US"),
+          count: totalBumpCount + 1,
+        },
+      }));
     }, 3000);
   };
 
