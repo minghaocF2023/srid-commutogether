@@ -110,8 +110,11 @@ const MapPage = () => {
   );
 
   const handleAddStory = () => {
-    console.log("Add story clicked");
-    router.push("/story");
+    if (closestAlbumId) {
+      router.push(`/story?id=${closestAlbumId}`);
+    } else {
+      router.push("/story");
+    }
   };
 
   const handleStartFakingLocation = () => {
