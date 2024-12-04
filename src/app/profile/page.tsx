@@ -1,7 +1,6 @@
 "use client"
-import { Avatar, Alert, Box, Typography, ImageList, ImageListItem, Snackbar, SnackbarCloseReason } from "@mui/material";
-import StyledLink from "@/components/StyledLink";
-import { useState, useEffect } from 'react';
+import { Avatar, Alert, Box, Typography, ImageList, ImageListItem, Snackbar, TextField } from "@mui/material";
+import { useState } from 'react';
 import StyledButton from '@/components/StyledButton';
 import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
@@ -19,25 +18,21 @@ const Profile = () => {
   const searchParams = useSearchParams();
   const user: string | null = searchParams.get('user');
   const userId: number = user ? +user : 0;
-  let userData: UserData;
-  if (userId < usersData.length) {
-    userData = usersData[userId];
-  } else {
+  
+  const [editableData, setEditableData] = useState<UserData>(() => {
+    if (userId < usersData.length) {
+      return { ...usersData[userId] };
+    }
     notFound();
-  }
+    return usersData[0];
+  });
 
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
   const [requestSent, setRequestSent] = useState<boolean>(() => {
-    // Check if the request status is saved in localStorage for this user
     const savedRequestStatus = localStorage.getItem(`requestSent_${userId}`);
     return savedRequestStatus ? JSON.parse(savedRequestStatus) : false;
   });
-
-  useEffect(() => {
-    // Persist the request status in localStorage when it changes
-    localStorage.setItem(`requestSent_${userId}`, JSON.stringify(requestSent));
-  }, [requestSent, userId]);
 
   const handleUnimplemented = () => {
     setOpen(true);
@@ -47,79 +42,113 @@ const Profile = () => {
     setRequestSent(true);
   };
 
-  const handleClose = (
-    reason?: SnackbarCloseReason,
-  ) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
+  const handleClose = () => {
     setOpen(false);
   };
 
+  const handleSave = () => {
+    // Update the usersData array with edited data
+    usersData[userId] = { ...editableData };
+    setEdit(false);
+    setOpen(true); // Show success message
+  };
+
+  const handleChange = (field: keyof UserData, value: string) => {
+    setEditableData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   return (
-    <div className="w-full h-screen p-4 pb-14">
+    <div className="flex flex-col w-full h-screen p-4 pb-16">
       <div className="flex justify-between items-end mb-5">
         <h1 className="text-2xl">Profile</h1>
-        <StyledButton
-          className={(edit || !userData.self) ? 'invisible' : ''}
-          text="Settings"
-          onClick={() => setEdit(true)}
-          styleType="primary"
-        />
+        {editableData.self && !edit && (
+          <StyledButton
+            text="Settings"
+            onClick={() => setEdit(true)}
+            styleType="primary"
+          />
+        )}
       </div>
+
       <div className="flex justify-stretch mb-4 h-[120px]">
-        <Avatar alt={userData.name} src={userData.avatar} sx={{ width: 120, height: 120 }} />
+        <Avatar alt={editableData.name} src={editableData.avatar} sx={{ width: 120, height: 120 }} />
         <div className="flex flex-col justify-start m-5">
-          <Typography variant="h5">
-            {userData.name} {edit && '✎'}
-          </Typography>
-          <Typography variant="subtitle1" className="text-slate-500">
-            {userData.email}
-          </Typography>
-          {userData.self ?
-            (edit && <StyledButton
-              text="Change Profile"
-              onClick={handleUnimplemented}
-              styleType='primary'
-            />) :
+          {edit ? (
+            <>
+              <TextField
+                value={editableData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                variant="standard"
+                className="mb-2"
+              />
+              <TextField
+                value={editableData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                variant="standard"
+                className="mb-2"
+                type="email"
+                placeholder="Enter your email"
+              />
+            </>
+          ) : (
+            <>
+              <Typography variant="h5">
+                {editableData.name}
+              </Typography>
+              <Typography variant="subtitle1" className="text-slate-500">
+                {editableData.email}
+              </Typography>
+            </>
+          )}
+          {!editableData.self && (
             <Box>
               {requestSent ? (
                 <StyledButton
-                  className="me-2"
                   text="Requested"
-                  styleType='secondary' // Different color to indicate request has been sent
+                  onClick={() => {}}
+                  styleType='secondary'
+                  className="me-2"
                 />
               ) : (
                 <StyledButton
-                  className="me-2"
                   text="Send Request"
                   onClick={handleSendRequest}
                   styleType='primary'
+                  className="me-2"
                 />
               )}
               <PersonAddAltIcon />
             </Box>
-          }
+          )}
         </div>
       </div>
+
       <div className="flex flex-col justify-stretch pb-4">
-        <Typography variant="subtitle1">Bio {edit && '✎'}</Typography>
-        <Alert icon={false} severity="info">
-          {userData.bio}
-        </Alert>
+        <Typography variant="subtitle1">Bio</Typography>
+        {edit ? (
+          <TextField
+            value={editableData.bio}
+            onChange={(e) => handleChange('bio', e.target.value)}
+            multiline
+            rows={3}
+            fullWidth
+            className="mt-2"
+          />
+        ) : (
+          <Alert icon={false} severity="info">
+            {editableData.bio}
+          </Alert>
+        )}
       </div>
-      <div className="flex flex-col justify-stretch pb-4">
-        <div className='flex h-max justify-between'>
-          <Typography variant="subtitle1">Public Album</Typography>
-          {edit && <StyledButton
-            className={edit ? '' : 'invisible'}
-            text='Add new'
-            onClick={handleUnimplemented}
-            styleType='primary'
-          />}
-        </div>
-        <ImageList sx={{ height: 390 }} cols={3} rowHeight={164}>
+
+      <div className='flex h-max justify-between'>
+        <Typography variant="subtitle1">Public Album</Typography>
+      </div>
+      <div className='flex-1 overflow-y-auto mb-4'>
+        <ImageList cols={3} rowHeight={164}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
               <img
@@ -131,28 +160,41 @@ const Profile = () => {
             </ImageListItem>
           ))}
         </ImageList>
-        <Snackbar
-          open={open}
-          autoHideDuration={1000}
-          onClose={handleClose}
-          message="Not implemented"
-        />
       </div>
-      {edit ?
+
+      {edit ? (
         <div className='flex justify-between'>
-          <StyledButton text='Back' styleType='secondary' onClick={() => setEdit(false)} />
-          <StyledButton text='Save' styleType='primary' onClick={() => setEdit(false)} />
-        </div> :
+          <StyledButton 
+            text='Cancel' 
+            styleType='secondary' 
+            onClick={() => {
+              setEditableData({ ...usersData[userId] }); // Reset changes
+              setEdit(false);
+            }} 
+          />
+          <StyledButton 
+            text='Save' 
+            styleType='primary' 
+            onClick={handleSave} 
+          />
+        </div>
+      ) : (
         <StyledButton
           text='Back'
           styleType='secondary'
           onClick={() => router.back()}
         />
-      }
+      )}
+
+      <Snackbar
+        open={open}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        message={edit ? "Not implemented" : "Changes saved successfully"}
+      />
     </div>
   );
 };
-
 
 const usersData = [
   {

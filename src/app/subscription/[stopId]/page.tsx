@@ -26,38 +26,38 @@ const SchedulePage = ({ params }: PageProps) => {
   const routes: Route[] = [
     {
       id: "1",
-      from: "Mountain View",
+      from: "San Jose",
       to: "San Francisco",
       time: "10:30 AM"
     },
     {
       id: "2",
-      from: "Mountain View",
-      to: "San Jose",
+      from: "San Jose",
+      to: "Mountain View",
       time: "11:30 AM"
     },
     {
       id: "3",
-      from: "Mountain View",
+      from: "Sunnyvale",
       to: "San Francisco",
       time: "12:30 AM"
     },
     {
       id: "4",
-      from: "Mountain View",
-      to: "San Francisco",
+      from: "Sunnyvale",
+      to: "San Jose",
       time: "13:30 AM"
     },
     {
       id: "5",
       from: "Mountain View",
-      to: "San Jose",
+      to: "San Francisco",
       time: "14:30 AM"
     },
     {
       id: "6",
       from: "Mountain View",
-      to: "San Francisco",
+      to: "San Jose",
       time: "15:30 AM"
     }
   ];
@@ -81,7 +81,12 @@ const SchedulePage = ({ params }: PageProps) => {
   return (
     <div className="min-h-screen bg-white p-4 pb-20">
       <div className="flex items-center mb-6">
-        <span className="text-sm">← back to home</span>
+        <span 
+          className="text-sm cursor-pointer flex items-center"
+          onClick={() => router.back()}
+        >
+          ← back to home
+        </span>
       </div>
 
       <h1 className="text-2xl font-semibold mb-6">New Subscription</h1>

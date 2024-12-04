@@ -33,13 +33,31 @@ const SubscriptionDetailPage = ({ params }: PageProps) => {
     router.push('/');
   };
 
+  // determine train position
+  const getTrainPosition = (from: string, to: string): number => {
+    const stations = ['San Jose', 'Sunnyvale', 'MTV', 'San Francisco'];
+    const fromIndex = stations.findIndex(station => 
+      station === (from === 'Mountain View' ? 'MTV' : from)
+    );
+    const toIndex = stations.findIndex(station => 
+      station === (to === 'Mountain View' ? 'MTV' : to)
+    );
+    
+    // Calculate a position between the stations
+    const totalStops = Math.abs(toIndex - fromIndex);
+    const progress = Math.floor(Math.random() * (totalStops + 1));
+    return fromIndex + (toIndex > fromIndex ? progress : -progress);
+  };
+
+  const currentPosition = getTrainPosition(subscription.stopName, subscription.destination);
+
   return (
     <div className="min-h-screen bg-white p-4 pb-20">
       {/* Top Navigation */}
       <div className="flex items-center mb-6">
         <span 
-          className="text-sm cursor-pointer" 
-          onClick={() => router.push('/')}
+          className="text-sm cursor-pointer flex items-center"
+          onClick={() => router.back()}
         >
           ← back to home
         </span>
@@ -75,7 +93,11 @@ const SubscriptionDetailPage = ({ params }: PageProps) => {
           {['San Jose', 'Sunnyvale', 'MTV', 'San Francisco'].map((stop, index) => (
             <div key={index} className="flex flex-col items-center">
               <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mb-1">
-                <div className={`w-3 h-3 rounded-full ${index === 2 ? 'bg-yellow-500' : 'bg-gray-400'}`} />
+                <div className={`w-3 h-3 rounded-full ${
+                  index === currentPosition 
+                    ? 'bg-yellow-500' 
+                    : 'bg-gray-400'
+                }`} />
               </div>
               <span className="text-xs">{stop}</span>
             </div>

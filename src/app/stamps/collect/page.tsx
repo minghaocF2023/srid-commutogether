@@ -5,14 +5,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import StyledButton from "@/components/StyledButton";
 import useLocalStorage from "@/hook/useLocalStorage";
-
-type LocationData = {
-  name: string;
-  stampImage: string;
-  image: string;
-  intro: string;
-  collected: boolean;
-};
+import { LocationData } from "@/types/stamps";
 
 const data: { [key: string]: LocationData } = {
   mtv: {

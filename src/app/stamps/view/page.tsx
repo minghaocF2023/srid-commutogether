@@ -4,13 +4,7 @@ import useLocalStorage from "@/hook/useLocalStorage";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import StyledLink from "@/components/StyledLink";
-type LocationData = {
-  name: string;
-  stampImage: string;
-  image: string;
-  intro: string;
-  collected: boolean;
-};
+import { LocationData } from "@/types/stamps";
 const View = () => {
   const searchParams = useSearchParams();
   const [stampData] = useLocalStorage<{ [key: string]: LocationData }>(
