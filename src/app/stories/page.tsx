@@ -22,12 +22,15 @@ const Home = () => {
   const searchParams = useSearchParams();
   const albumId: string | null = searchParams.get("id");
   const [photosData, setPhotosData] = useState([]);
+  const [albumName, setAlbumName] = useState<string>("");
 
   useEffect(() => {
     let initialPhotos = [];
+    let foundAlbumName = "";
     for (const album of albums["albums"]) {
       if (album["albumId"] === albumId) {
         initialPhotos = album["photos"];
+        foundAlbumName = album["name"];
         break;
       }
     }
@@ -35,6 +38,8 @@ const Home = () => {
     if (!initialPhotos.length) {
       notFound();
     }
+
+    setAlbumName(foundAlbumName);
 
     // Retrieve user stories from localStorage
     const existingStories = localStorage.getItem("userStories");
@@ -67,11 +72,7 @@ const Home = () => {
         </Button>
       </Box>
       <Box className="flex justify-between">
-        <Typography variant="h4">
-          {albumId === "f9fdba86-d68a-4730-9172-24eef2bf6051"
-            ? "Mountain View"
-            : "Sunnyvale"}
-        </Typography>
+        <Typography variant="h4">{albumName}</Typography>
         <Link href={`/story?id=${albumId}`}>
           <ControlPointIcon fontSize="large" />
         </Link>

@@ -1,61 +1,138 @@
 {
   "albums": [
     {
-      "albumId": "f9fdba86-d68a-4730-9172-24eef2bf6051",
-      "name": "682 Villa Street, Mountain View, California 94041, United States",
+      "albumId": "5de39ff0-b2db-4a4a-969a-3e6ae1832ba4",
+      "name": "Stanford",
       "photos": [
         {
-          "photoId": "c7b15706-4454-40e5-a397-3cbbe82cfcac",
+          "photoId": "706349b2-96b5-467d-838d-f024227bfa3b",
+          "photoUrl": "/photos/stanford2.JPG",
+          "latitude": 37.42719444444444,
+          "longitude": -122.16790833333334,
+          "location": "Stanford",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "95059ce3-ac0c-4a75-8658-3ddf7a3b1b13",
+          "photoUrl": "/photos/mystanford4.JPG",
+          "latitude": 37.42776944444444,
+          "longitude": -122.16665555555556,
+          "location": "Stanford",
+          "isUserUpload": true
+        },
+        {
+          "photoId": "6c12f3f9-7a62-4a7b-842c-294b658c7167",
+          "photoUrl": "/photos/mystanford3.JPG",
+          "latitude": 37.42813611111111,
+          "longitude": -122.166825,
+          "location": "Stanford",
+          "isUserUpload": true
+        },
+        {
+          "photoId": "17ddc8d2-55dc-4fda-9b58-ac93741837f2",
+          "photoUrl": "/photos/stanford1.JPG",
+          "latitude": 37.425086111111106,
+          "longitude": -122.16904444444445,
+          "location": "Stanford",
+          "isUserUpload": false
+        }
+      ],
+      "containsUserUploads": true
+    },
+    {
+      "albumId": "6577be51-87bd-4336-88c1-ef894d7bc3ff",
+      "name": "Old Mountain View",
+      "photos": [
+        {
+          "photoId": "25b34b78-6180-4a11-b891-861b2deb6ed1",
           "photoUrl": "/photos/myphoto1.JPG",
           "latitude": 37.392966666666666,
           "longitude": -122.07684444444445,
-          "location": "682 Villa Street, Mountain View, California 94041, United States",
+          "location": "Old Mountain View",
           "isUserUpload": true
         },
         {
-          "photoId": "ff5e7ac0-029b-4470-a2ea-6a4d143048e2",
-          "photoUrl": "/photos/photo5.JPG",
-          "latitude": 37.39357777777778,
-          "longitude": -122.08003888888888,
-          "location": "Wild Cherry Lane, Mountain View, California 94041, United States",
-          "isUserUpload": false
-        },
-        {
-          "photoId": "a2ebe10e-b22e-40af-8f87-d4fbf08faa1c",
+          "photoId": "bc359606-b0e7-4012-a4c6-e07eb13c986a",
           "photoUrl": "/photos/photo2.JPG",
           "latitude": 37.39264722222222,
           "longitude": -122.07605,
-          "location": "515 Villa Street, Mountain View, California 94041, United States",
+          "location": "Old Mountain View",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "8d6b7f7d-47b8-4981-8a7d-1ab244ef297a",
+          "photoUrl": "/photos/photo5.JPG",
+          "latitude": 37.39357777777778,
+          "longitude": -122.08003888888888,
+          "location": "Old Mountain View",
           "isUserUpload": false
         }
       ],
       "containsUserUploads": true
     },
     {
-      "albumId": "e07fb5a0-61cd-4c98-a1ec-b47b1f2ce8f3",
-      "name": "790 East El Camino Real, Mountain View, California 94040, United States",
+      "albumId": "3f3350f3-99ab-46d1-8c9e-b05c6805823a",
+      "name": "North Whisman",
       "photos": [
         {
-          "photoId": "4a1f6847-2ba3-413c-8ffc-ed773242d1fa",
+          "photoId": "0f299588-9257-47c4-bc37-123cae0e52c8",
+          "photoUrl": "/photos/nasa2.JPG",
+          "latitude": 37.406794444444444,
+          "longitude": -122.06768055555555,
+          "location": "North Whisman",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "e6601424-51c5-4208-a207-701c1de27947",
+          "photoUrl": "/photos/nasa1.JPG",
+          "latitude": 37.40685555555555,
+          "longitude": -122.06773333333334,
+          "location": "North Whisman",
+          "isUserUpload": false
+        }
+      ],
+      "containsUserUploads": false
+    },
+    {
+      "albumId": "0b28bd18-0818-4e2a-bb16-da2ff237c20b",
+      "name": "Cuernavaca",
+      "photos": [
+        {
+          "photoId": "a2669742-c095-43fb-9089-a390ef520289",
           "photoUrl": "/photos/myphoto3.JPG",
           "latitude": 37.37677222222222,
           "longitude": -122.064225,
-          "location": "790 East El Camino Real, Mountain View, California 94040, United States",
+          "location": "Cuernavaca",
           "isUserUpload": true
         }
       ],
       "containsUserUploads": true
     },
     {
-      "albumId": "a957a385-1b60-4b1f-a896-945b4636daab",
-      "name": "Computer History Museum, 1401 N Shoreline Blvd, Mountain View, California 94043, United States",
+      "albumId": "918fb642-112a-41d8-9bf0-7f37cca611ab",
+      "name": "Financial District",
       "photos": [
         {
-          "photoId": "28d8e9e3-aa02-431c-8815-03e35e8e24d7",
+          "photoId": "332b05b0-69cb-45b9-93d6-0bb46547613e",
+          "photoUrl": "/photos/IMG_3340.JPG",
+          "latitude": 37.79372222222222,
+          "longitude": -122.39701111111111,
+          "location": "Financial District",
+          "isUserUpload": false
+        }
+      ],
+      "containsUserUploads": false
+    },
+    {
+      "albumId": "8fba6ebc-272e-419b-9f6c-414aac646752",
+      "name": "North Bayshore",
+      "photos": [
+        {
+          "photoId": "c1560fd9-c420-4c50-835c-bac8d540f20d",
           "photoUrl": "/photos/photo4.JPG",
           "latitude": 37.414325,
           "longitude": -122.07710277777777,
-          "location": "Computer History Museum, 1401 N Shoreline Blvd, Mountain View, California 94043, United States",
+          "location": "North Bayshore",
           "isUserUpload": false
         }
       ],

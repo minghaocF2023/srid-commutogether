@@ -60,6 +60,15 @@ def reverse_geocode(lat, lon):
 
         data = response.json()
         if data["features"]:
+            # Extract relevant components for a shorter name
+            for feature in data["features"]:
+                if "place" in feature["place_type"]:
+                    return feature["text"]
+                if "locality" in feature["place_type"]:
+                    return feature["text"]
+                if "neighborhood" in feature["place_type"]:
+                    return feature["text"]
+            # Fallback to the full place name if no specific component is found
             return data["features"][0]["place_name"]
         return "Unknown location"
     except Exception as e:
