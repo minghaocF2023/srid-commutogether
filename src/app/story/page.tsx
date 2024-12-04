@@ -39,6 +39,7 @@ const StoryPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isFlashing, setIsFlashing] = useState<boolean>(false);
 
   // Request Camera Access on Mount
   useEffect(() => {
@@ -94,6 +95,10 @@ const StoryPage = () => {
     // Convert the canvas image to a data URL
     const dataURL = canvas.toDataURL("image/png");
     setCapturedPhoto(dataURL);
+
+    // Trigger flash effect
+    setIsFlashing(true);
+    setTimeout(() => setIsFlashing(false), 200);
   };
 
   // Handle Retake Photo
@@ -120,6 +125,11 @@ const StoryPage = () => {
             Please enable camera permissions in your browser settings.
           </Typography>
         </Box>
+      )}
+
+      {/* Flash Overlay */}
+      {isFlashing && (
+        <Box className="absolute top-0 left-0 w-full h-full bg-white opacity-50 transition-opacity duration-200"></Box>
       )}
 
       {/* Video Feed */}
