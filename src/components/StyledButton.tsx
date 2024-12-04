@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 
+
 interface StyledButtonProps {
   text: string;
   onClick: () => void;
@@ -12,14 +13,16 @@ const StyledButton = ({
   text,
   onClick,
   className,
+  styleType,
   variant = "contained",
 }: StyledButtonProps) => {
   return (
     <Button
-      onClick={onClick}
       sx={{ paddingY: "5px" }}
-      className={`${className} text-white`}
+      className={`text-white ${className}`}
       variant={variant}
+      color={styleType}
+      onClick={onClick}
     >
       {text}
     </Button>
