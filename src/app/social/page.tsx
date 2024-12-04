@@ -1,24 +1,30 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter to navigate to other pages
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter to navigate to other pages
 
 interface SocialProps {
-  onSelectFriend: (friend: { name: string; status: string; image: string }) => void;
+  onSelectFriend: (friend: {
+    name: string;
+    status: string;
+    image: string;
+  }) => void;
 }
 
 const Social = ({ onSelectFriend }: SocialProps) => {
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [savedStatus, setSavedStatus] = useState<string | null>(null);
-  const [friendStatuses, setFriendStatuses] = useState<{ name: string; status: string; image: string }[]>([
-    { name: 'Brian', status: "I love Caltrain", image: "/Brian.webp" },
-    { name: 'Alice', status: "Boring", image: "/Alice.webp" },
+  const [friendStatuses, setFriendStatuses] = useState<
+    { name: string; status: string; image: string }[]
+  >([
+    { name: "Brian", status: "I love Caltrain", image: "/Brian.webp" },
+    { name: "Alice", status: "Boring", image: "/Alice.webp" },
   ]);
   const router = useRouter(); // Initialize the router
 
   useEffect(() => {
     // Load user status from localStorage if available
-    const storedStatus = localStorage.getItem('userStatus');
+    const storedStatus = localStorage.getItem("userStatus");
     if (storedStatus) {
       setSavedStatus(storedStatus);
     }
@@ -28,10 +34,14 @@ const Social = ({ onSelectFriend }: SocialProps) => {
     if (isAccepted && JSON.parse(isAccepted)) {
       setFriendStatuses((prevStatuses) => {
         // Check if Samuel already exists in friendStatuses
-        if (!prevStatuses.some((friend) => friend.name === 'Samuel')) {
+        if (!prevStatuses.some((friend) => friend.name === "Samuel")) {
           return [
             ...prevStatuses,
-            { name: 'Samuel', status: 'Hi I am Samuel!', image: '/Samuel.jpeg' },
+            {
+              name: "Samuel",
+              status: "Hi I am Samuel!",
+              image: "/Samuel.jpeg",
+            },
           ];
         }
         return prevStatuses;
@@ -46,13 +56,17 @@ const Social = ({ onSelectFriend }: SocialProps) => {
   const saveStatus = () => {
     // Save user status to localStorage and update savedStatus
     if (userStatus) {
-      localStorage.setItem('userStatus', userStatus);
+      localStorage.setItem("userStatus", userStatus);
       setSavedStatus(userStatus);
     }
   };
 
   const nearbyUsers = [
-    { name: 'Sherry', image: 'Sherry.jpg', link: 'http://localhost:3000/profile?user=2' },
+    {
+      name: "Sherry",
+      image: "Sherry.jpg",
+      link: "/profile?user=2",
+    },
   ];
 
   const handleNearbyUserClick = (link: string) => {
@@ -65,12 +79,15 @@ const Social = ({ onSelectFriend }: SocialProps) => {
       <div className="flex items-center gap-3 mb-6">
         <input
           type="text"
-          value={userStatus ?? ''}
+          value={userStatus ?? ""}
           onChange={handleStatusChange}
           className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
           placeholder="What's on your mind?"
         />
-        <button onClick={saveStatus} className="p-2 bg-blue-500 text-white rounded-lg">
+        <button
+          onClick={saveStatus}
+          className="p-2 bg-blue-500 text-white rounded-lg"
+        >
           Save
         </button>
       </div>
@@ -124,10 +141,16 @@ const Social = ({ onSelectFriend }: SocialProps) => {
             className="flex items-center gap-3 p-3 border-b border-gray-200 cursor-pointer"
             onClick={() => onSelectFriend(friend)}
           >
-            <img className="w-10 h-10 bg-gray-300 rounded-full bg-white" src={friend.image} alt={friend.name} />
+            <img
+              className="w-10 h-10 bg-gray-300 rounded-full bg-white"
+              src={friend.image}
+              alt={friend.name}
+            />
             <div>
               <strong className="block">{friend.name}</strong>
-              <p className="text-sm text-gray-600">{getLastMessage(friend.name)}</p>
+              <p className="text-sm text-gray-600">
+                {getLastMessage(friend.name)}
+              </p>
             </div>
           </div>
         ))}
@@ -141,7 +164,11 @@ const Social = ({ onSelectFriend }: SocialProps) => {
             className="flex items-center gap-3 p-3 border-b border-gray-200 cursor-pointer"
             onClick={() => handleNearbyUserClick(user.link)}
           >
-            <img className="w-10 h-10 bg-gray rounded-full" src={user.image} alt={user.name} />
+            <img
+              className="w-10 h-10 bg-gray rounded-full"
+              src={user.image}
+              alt={user.name}
+            />
             <span className="text-base font-medium">{user.name}</span>
           </div>
         ))}
@@ -158,9 +185,10 @@ const getLastMessage = (friendName: string) => {
   } else {
     // Default last message if no messages in localStorage
     const initialMessages = {
-      Brian: 'I might join you. Let me know when you are about to leave!',
-      Alice: 'I was thinking of checking out the new art gallery.',
+      Brian: "I might join you. Let me know when you are about to leave!",
+      Alice: "I was thinking of checking out the new art gallery.",
     };
+    // @ts-ignore
     return initialMessages[friendName];
   }
 };
@@ -174,8 +202,15 @@ interface Friend {
 const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
   const router = useRouter(); // Initialize the router
 
-  const [friendRequests, setFriendRequests] = useState<{ name: string; image: string; accepted: boolean; link: string }[]>([
-    { name: 'Samuel', image: '/Samuel.jpeg', accepted: false, link: 'http://localhost:3000/profile?user=1' },
+  const [friendRequests, setFriendRequests] = useState<
+    { name: string; image: string; accepted: boolean; link: string }[]
+  >([
+    {
+      name: "Samuel",
+      image: "/Samuel.jpeg",
+      accepted: false,
+      link: "/profile?user=1",
+    },
   ]);
 
   useEffect(() => {
@@ -186,7 +221,7 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
     if (isAccepted && JSON.parse(isAccepted)) {
       setFriendRequests((prevRequests) =>
         prevRequests.map((request) =>
-          request.name === 'Samuel' ? { ...request, accepted: true } : request
+          request.name === "Samuel" ? { ...request, accepted: true } : request
         )
       );
     }
@@ -194,7 +229,7 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
     // Filter out Samuel's request if it was declined
     if (isDeclined && JSON.parse(isDeclined)) {
       setFriendRequests((prevRequests) =>
-        prevRequests.filter((request) => request.name !== 'Samuel')
+        prevRequests.filter((request) => request.name !== "Samuel")
       );
     }
   }, []);
@@ -206,8 +241,11 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
         i === index ? { ...request, accepted: true } : request
       )
     );
-    if (friendRequests[index].name === 'Samuel') {
-      localStorage.setItem(`friendRequestAccepted_Samuel`, JSON.stringify(true));
+    if (friendRequests[index].name === "Samuel") {
+      localStorage.setItem(
+        `friendRequestAccepted_Samuel`,
+        JSON.stringify(true)
+      );
     }
   };
 
@@ -218,12 +256,17 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
     setFriendRequests(updatedRequests);
 
     // Persist the declined state in localStorage
-    if (declinedFriend.name === 'Samuel') {
-      localStorage.setItem(`friendRequestDeclined_Samuel`, JSON.stringify(true));
-      localStorage.setItem(`friendRequestAccepted_Samuel`, JSON.stringify(false));
+    if (declinedFriend.name === "Samuel") {
+      localStorage.setItem(
+        `friendRequestDeclined_Samuel`,
+        JSON.stringify(true)
+      );
+      localStorage.setItem(
+        `friendRequestAccepted_Samuel`,
+        JSON.stringify(false)
+      );
     }
   };
-
 
   const handleProfileClick = (link: string) => {
     router.push(link); // Navigate to the user's profile page
@@ -239,12 +282,19 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
       </header>
       <main className="flex-1 p-4 overflow-auto">
         {friendRequests.map((friend, index) => (
-          <div key={index} className="flex items-center gap-3 p-3 border-b border-gray-200">
+          <div
+            key={index}
+            className="flex items-center gap-3 p-3 border-b border-gray-200"
+          >
             <div
               className="flex items-center gap-3 cursor-pointer"
               onClick={() => handleProfileClick(friend.link)}
             >
-              <img className="w-10 h-10 rounded-full" src={friend.image} alt={friend.name} />
+              <img
+                className="w-10 h-10 rounded-full"
+                src={friend.image}
+                alt={friend.name}
+              />
               <span className="text-base font-medium">{friend.name}</span>
             </div>
             <div className="ml-auto flex gap-2">
@@ -275,16 +325,26 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
           </div>
         ))}
         {friendRequests.length === 0 && (
-          <p className="text-center text-gray-500">No friend requests at the moment.</p>
+          <p className="text-center text-gray-500">
+            No friend requests at the moment.
+          </p>
         )}
       </main>
     </div>
   );
 };
 
-const ChatRoom = ({ friend, onBack }: { friend: Friend; onBack: () => void }) => {
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
-  const [newMessage, setNewMessage] = useState('');
+const ChatRoom = ({
+  friend,
+  onBack,
+}: {
+  friend: Friend;
+  onBack: () => void;
+}) => {
+  const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
+    []
+  );
+  const [newMessage, setNewMessage] = useState("");
 
   // Load messages from localStorage on component mount
   useEffect(() => {
@@ -294,16 +354,32 @@ const ChatRoom = ({ friend, onBack }: { friend: Friend; onBack: () => void }) =>
     } else {
       const initialMessages = {
         Brian: [
-          { sender: 'friend', text: 'Hey Tommy! When will you go to MTV station?' },
-          { sender: 'friend', text: "I'm planning to leave around 5 PM. What about you?" },
-          { sender: 'me', text: 'I might join you. Let me know when you are about to leave!' },
+          {
+            sender: "friend",
+            text: "Hey Tommy! When will you go to MTV station?",
+          },
+          {
+            sender: "friend",
+            text: "I'm planning to leave around 5 PM. What about you?",
+          },
+          {
+            sender: "me",
+            text: "I might join you. Let me know when you are about to leave!",
+          },
         ],
         Alice: [
-          { sender: 'friend', text: 'Hi Tommy, are you free this weekend?' },
-          { sender: 'me', text: 'Hey Alice, I might be free on Sunday. What do you have in mind?' },
-          { sender: 'friend', text: 'I was thinking of checking out the new art gallery.' },
+          { sender: "friend", text: "Hi Tommy, are you free this weekend?" },
+          {
+            sender: "me",
+            text: "Hey Alice, I might be free on Sunday. What do you have in mind?",
+          },
+          {
+            sender: "friend",
+            text: "I was thinking of checking out the new art gallery.",
+          },
         ],
       };
+      // @ts-ignore
       setMessages(initialMessages[friend.name] || []);
     }
   }, [friend]);
@@ -311,23 +387,28 @@ const ChatRoom = ({ friend, onBack }: { friend: Friend; onBack: () => void }) =>
   // Update localStorage whenever messages change
   useEffect(() => {
     if (messages.length > 0) {
-      localStorage.setItem(`chatMessages_${friend.name}`, JSON.stringify(messages));
+      localStorage.setItem(
+        `chatMessages_${friend.name}`,
+        JSON.stringify(messages)
+      );
     }
   }, [messages, friend]);
 
   const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
-      const updatedMessages = [...messages, { sender: 'me', text: newMessage }];
+    if (newMessage.trim() !== "") {
+      const updatedMessages = [...messages, { sender: "me", text: newMessage }];
       setMessages(updatedMessages);
-      setNewMessage('');
+      setNewMessage("");
     }
   };
 
   return (
     <div className="flex flex-col h-full">
       <header className="flex justify-between items-center p-4 bg-white border-b">
-        <button className="text-sm absolute left-4" onClick={onBack}><h2 className="text-lg font-bold mx-auto">&lt; {friend.name}</h2></button>
-        {friend.name === 'Brian' && (
+        <button className="text-sm absolute left-4" onClick={onBack}>
+          <h2 className="text-lg font-bold mx-auto">&lt; {friend.name}</h2>
+        </button>
+        {friend.name === "Brian" && (
           <span className="text-xs text-gray-500 mx-auto mt-1">
             You have the same schedule with {friend.name}!
           </span>
@@ -336,18 +417,34 @@ const ChatRoom = ({ friend, onBack }: { friend: Friend; onBack: () => void }) =>
       <main className="flex-1 p-4 overflow-auto">
         <p className="text-center text-sm text-gray-500 mb-4">Today</p>
         {messages.map((message, index) => (
-          <div key={index} className={`flex ${message.sender === 'me' ? 'justify-end' : ''} items-start gap-3 mb-4`}>
-            {message.sender !== 'me' && (
-              <img className="w-10 h-10 rounded-full" src={friend.image} alt={friend.name} />
+          <div
+            key={index}
+            className={`flex ${
+              message.sender === "me" ? "justify-end" : ""
+            } items-start gap-3 mb-4`}
+          >
+            {message.sender !== "me" && (
+              <img
+                className="w-10 h-10 rounded-full"
+                src={friend.image}
+                alt={friend.name}
+              />
             )}
             <div
-              className={`p-3 rounded-lg text-sm ${message.sender === 'me' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
-                }`}
+              className={`p-3 rounded-lg text-sm ${
+                message.sender === "me"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
             >
               {message.text}
             </div>
-            {message.sender === 'me' && (
-              <img className="w-10 h-10 rounded-full" alt="Tommy" src="Tommy_Flanagan.webp" />
+            {message.sender === "me" && (
+              <img
+                className="w-10 h-10 rounded-full"
+                alt="Tommy"
+                src="Tommy_Flanagan.webp"
+              />
             )}
           </div>
         ))}
@@ -359,11 +456,25 @@ const ChatRoom = ({ friend, onBack }: { friend: Friend; onBack: () => void }) =>
           placeholder="Write something here..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
-        <button className="p-3 bg-yellow-500 text-white rounded-full" onClick={handleSendMessage}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+        <button
+          className="p-3 bg-yellow-500 text-white rounded-full"
+          onClick={handleSendMessage}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </button>
       </footer>
@@ -407,8 +518,19 @@ export default function ChatPage() {
               className="absolute right-4 p-2"
               onClick={handleFriendRequestsClick}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a7 7 0 00-14 0v2h5m0 0v-2a3 3 0 016 0v2m-6-2a3 3 0 00-6 0v2h6zm8-10a4 4 0 01-8 0 4 4 0 018 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M17 20h5v-2a7 7 0 00-14 0v2h5m0 0v-2a3 3 0 016 0v2m-6-2a3 3 0 00-6 0v2h6zm8-10a4 4 0 01-8 0 4 4 0 018 0z"
+                />
               </svg>
             </button>
           </header>
@@ -421,5 +543,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-export { Social };

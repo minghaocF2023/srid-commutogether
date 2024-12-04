@@ -29,7 +29,7 @@ const Home = () => {
   const [scrollToTop, setScrollToTop] = useState<boolean>(true);
   const [showPreferences, setShowPreferences] = useState(false);
 
-  const handleScroll = (e) => {
+  const handleScroll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.scrollTop === 0) {
       setScrollToTop(true);
     } else {
@@ -54,7 +54,7 @@ const Home = () => {
 
   return (
     <div
-      onScroll={handleScroll}
+      onScroll={() => handleScroll}
       className="max-h-screen  pb-20 bg-white overflow-y-auto"
     >
       {/* Header */}
