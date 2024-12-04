@@ -1,5 +1,5 @@
 "use client";
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import { useSubscriptionStore } from "@/lib/stores/subscriptionStore";
@@ -22,6 +22,7 @@ const SchedulePage = ({ params }: PageProps) => {
   const { stopId } = use(params);
   const addSubscription = useSubscriptionStore((state) => state.addSubscription);
   const hasSubscription = useSubscriptionStore((state) => state.hasSubscription);
+  const [hoveredRouteId, setHoveredRouteId] = useState<string | null>(null);
 
   const routes: Route[] = [
     {
@@ -99,7 +100,9 @@ const SchedulePage = ({ params }: PageProps) => {
             <div
               key={route.id}
               className={`flex items-center justify-between p-3 rounded-lg bg-gray-50
-                ${route.id === "3" ? 'border-2 border-black' : ''}`}
+                ${hoveredRouteId === route.id ? "border-2 border-black" : ""}`}
+              onMouseEnter={() => setHoveredRouteId(route.id)} 
+              onMouseLeave={() => setHoveredRouteId(null)}
             >
               <div className="flex items-center flex-1">
                 <DirectionsTransitIcon className="text-black mr-3" />
