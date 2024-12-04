@@ -62,7 +62,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="w-full h-screen p-4 pb-14">
+    <div className="flex flex-col w-full h-screen p-4 pb-16">
       <div className="flex justify-between items-end mb-5">
         <h1 className="text-2xl">Profile</h1>
         {editableData.self && !edit && (
@@ -145,11 +145,11 @@ const Profile = () => {
         )}
       </div>
 
-      <div className="flex flex-col justify-stretch pb-4">
-        <div className='flex h-max justify-between'>
-          <Typography variant="subtitle1">Public Album</Typography>
-        </div>
-        <ImageList sx={{ height: 390 }} cols={3} rowHeight={164}>
+      <div className='flex h-max justify-between'>
+        <Typography variant="subtitle1">Public Album</Typography>
+      </div>
+      <div className='flex-1 overflow-y-auto mb-4'>
+        <ImageList cols={3} rowHeight={164}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
               <img
