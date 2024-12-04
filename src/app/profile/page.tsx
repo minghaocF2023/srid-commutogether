@@ -1,9 +1,19 @@
-"use client"
-import { Avatar, Alert, Box, Typography, ImageList, ImageListItem, Snackbar, TextField } from "@mui/material";
-import { useState } from 'react';
-import StyledButton from '@/components/StyledButton';
-import { useSearchParams, useRouter, notFound } from 'next/navigation';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+"use client";
+import {
+  Avatar,
+  Alert,
+  Box,
+  Typography,
+  ImageList,
+  ImageListItem,
+  Snackbar,
+  SnackbarCloseReason,
+  TextField,
+} from "@mui/material";
+import { useState, useEffect } from "react";
+import StyledButton from "@/components/StyledButton";
+import { useSearchParams, useRouter, notFound } from "next/navigation";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 type UserData = {
   name: string;
@@ -11,14 +21,14 @@ type UserData = {
   avatar: string;
   bio: string;
   self: boolean;
-}
+};
 
 const Profile = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const user: string | null = searchParams.get('user');
+  const user: string | null = searchParams.get("user");
   const userId: number = user ? +user : 0;
-  
+
   const [editableData, setEditableData] = useState<UserData>(() => {
     if (userId < usersData.length) {
       return { ...usersData[userId] };
@@ -33,6 +43,15 @@ const Profile = () => {
     const savedRequestStatus = localStorage.getItem(`requestSent_${userId}`);
     return savedRequestStatus ? JSON.parse(savedRequestStatus) : false;
   });
+  const [requestAccepted, setRequestAccepted] = useState<boolean>(() => {
+    const acceptedStatus = localStorage.getItem(`friendRequestAccepted_Samuel`);
+    return acceptedStatus ? JSON.parse(acceptedStatus) : false;
+  });
+  const [requestDeclined, setRequestDeclined] = useState<boolean>(false);
+
+  useEffect(() => {
+    localStorage.setItem(`requestSent_${userId}`, JSON.stringify(requestSent));
+  }, [requestSent, userId]);
 
   const handleUnimplemented = () => {
     setOpen(true);
@@ -42,7 +61,24 @@ const Profile = () => {
     setRequestSent(true);
   };
 
-  const handleClose = () => {
+  const handleAcceptRequest = () => {
+    setRequestAccepted(true);
+    setRequestDeclined(false);
+    localStorage.setItem(`friendRequestAccepted_Samuel`, JSON.stringify(true));
+  };
+
+  const handleDeclineRequest = () => {
+    setRequestDeclined(true);
+    setRequestAccepted(false);
+    localStorage.setItem(`friendRequestAccepted_Samuel`, JSON.stringify(false));
+    localStorage.setItem(`friendRequestDeclined_Samuel`, JSON.stringify(true)); // Add this line
+  };
+
+  const handleClose = (reason?: SnackbarCloseReason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
     setOpen(false);
   };
 
@@ -54,9 +90,9 @@ const Profile = () => {
   };
 
   const handleChange = (field: keyof UserData, value: string) => {
-    setEditableData(prev => ({
+    setEditableData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -74,19 +110,60 @@ const Profile = () => {
       </div>
 
       <div className="flex justify-stretch mb-4 h-[120px]">
-        <Avatar alt={editableData.name} src={editableData.avatar} sx={{ width: 120, height: 120 }} />
+        <Avatar
+          alt={editableData.name}
+          src={editableData.avatar}
+          sx={{ width: 120, height: 120 }}
+        />
         <div className="flex flex-col justify-start m-5">
-          {edit ? (
+          <Typography variant="h5">
+            {editableData.name} {edit && "✎"}
+          </Typography>
+          <Typography variant="subtitle1" className="text-slate-500">
+            {editableData.email}
+          </Typography>
+          {editableData.self ? (
+            edit && (
+              <StyledButton
+                text="Change Profile"
+                onClick={handleUnimplemented}
+                styleType="primary"
+              />
+            )
+          ) : userId === 1 && !requestAccepted && !requestDeclined ? (
+            <Box>
+              <StyledButton
+                className="me-2"
+                text="Accept"
+                onClick={handleAcceptRequest}
+                styleType="primary"
+              />
+              <StyledButton
+                className="me-2"
+                text="Decline"
+                onClick={handleDeclineRequest}
+                styleType="secondary"
+              />
+            </Box>
+          ) : userId === 1 && requestAccepted ? (
+            <StyledButton
+              onClick={() => {}}
+              className="me-2"
+              text="Friend"
+              styleType="secondary"
+              disabled={true}
+            />
+          ) : edit ? (
             <>
               <TextField
                 value={editableData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
+                onChange={(e) => handleChange("name", e.target.value)}
                 variant="standard"
                 className="mb-2"
               />
               <TextField
                 value={editableData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
+                onChange={(e) => handleChange("email", e.target.value)}
                 variant="standard"
                 className="mb-2"
                 type="email"
@@ -94,29 +171,29 @@ const Profile = () => {
               />
             </>
           ) : (
-            <>
-              <Typography variant="h5">
-                {editableData.name}
-              </Typography>
-              <Typography variant="subtitle1" className="text-slate-500">
-                {editableData.email}
-              </Typography>
-            </>
+            editableData.self && (
+              <>
+                <Typography variant="h5">{editableData.name}</Typography>
+                <Typography variant="subtitle1" className="text-slate-500">
+                  {editableData.email}
+                </Typography>
+              </>
+            )
           )}
-          {!editableData.self && (
+          {!editableData.self && userId !== 1 && (
             <Box>
               {requestSent ? (
                 <StyledButton
                   text="Requested"
                   onClick={() => {}}
-                  styleType='secondary'
+                  styleType="secondary"
                   className="me-2"
                 />
               ) : (
                 <StyledButton
                   text="Send Request"
                   onClick={handleSendRequest}
-                  styleType='primary'
+                  styleType="primary"
                   className="me-2"
                 />
               )}
@@ -131,7 +208,7 @@ const Profile = () => {
         {edit ? (
           <TextField
             value={editableData.bio}
-            onChange={(e) => handleChange('bio', e.target.value)}
+            onChange={(e) => handleChange("bio", e.target.value)}
             multiline
             rows={3}
             fullWidth
@@ -144,10 +221,10 @@ const Profile = () => {
         )}
       </div>
 
-      <div className='flex h-max justify-between'>
+      <div className="flex h-max justify-between">
         <Typography variant="subtitle1">Public Album</Typography>
       </div>
-      <div className='flex-1 overflow-y-auto mb-4'>
+      <div className="flex-1 overflow-y-auto mb-4">
         <ImageList cols={3} rowHeight={164}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
@@ -163,25 +240,21 @@ const Profile = () => {
       </div>
 
       {edit ? (
-        <div className='flex justify-between'>
-          <StyledButton 
-            text='Cancel' 
-            styleType='secondary' 
+        <div className="flex justify-between">
+          <StyledButton
+            text="Cancel"
+            styleType="secondary"
             onClick={() => {
               setEditableData({ ...usersData[userId] }); // Reset changes
               setEdit(false);
-            }} 
+            }}
           />
-          <StyledButton 
-            text='Save' 
-            styleType='primary' 
-            onClick={handleSave} 
-          />
+          <StyledButton text="Save" styleType="primary" onClick={handleSave} />
         </div>
       ) : (
         <StyledButton
-          text='Back'
-          styleType='secondary'
+          text="Back"
+          styleType="secondary"
           onClick={() => router.back()}
         />
       )}
@@ -189,7 +262,7 @@ const Profile = () => {
       <Snackbar
         open={open}
         autoHideDuration={2000}
-        onClose={handleClose}
+        onClose={() => handleClose}
         message={edit ? "Not implemented" : "Changes saved successfully"}
       />
     </div>
@@ -198,96 +271,96 @@ const Profile = () => {
 
 const usersData = [
   {
-    name: 'Tommy Chan',
-    email: 'tommy@google.com',
+    name: "Tommy Chan",
+    email: "tommy@google.com",
     avatar: "Tommy_Flanagan.webp",
-    bio: 'Hi I am Tommy I like taking Caltrain!',
+    bio: "Hi I am Tommy I like taking Caltrain!",
     self: true,
   },
   {
-    name: 'Samuel Lin',
-    email: 'samuel@gmail.com',
+    name: "Samuel Lin",
+    email: "samuel@gmail.com",
     avatar: "Samuel.jpeg",
-    bio: 'Hi I am Samuel I like taking Caltrain!',
+    bio: "Hi I am Samuel I like taking Caltrain!",
     self: false,
   },
   {
-    name: 'Sherry Hsu',
-    email: 'sherry@gmail.com',
+    name: "Sherry Hsu",
+    email: "sherry@gmail.com",
     avatar: "Sherry.jpg",
-    bio: 'Hi I am Sherry I like taking Caltrain!',
+    bio: "Hi I am Sherry I like taking Caltrain!",
     self: false,
   },
-]
+];
 
 const itemData = [
   {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
+    img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
+    title: "Fern",
   },
   {
-    img: 'https://images.unsplash.com/photo-1627308595229-7830a5c91f9f',
-    title: 'Snacks',
+    img: "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f",
+    title: "Snacks",
   },
   {
-    img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
+    img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
+    title: "Mushrooms",
   },
   {
-    img: 'https://images.unsplash.com/photo-1529655683826-aba9b3e77383',
-    title: 'Tower',
+    img: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383",
+    title: "Tower",
   },
   {
-    img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
+    img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
+    title: "Sea star",
   },
   {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
+    img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+    title: "Honey",
   },
   {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
+    img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+    title: "Basketball",
   },
   {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
+    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+    title: "Breakfast",
   },
   {
-    img: 'https://images.unsplash.com/photo-1627328715728-7bcc1b5db87d',
-    title: 'Tree',
+    img: "https://images.unsplash.com/photo-1627328715728-7bcc1b5db87d",
+    title: "Tree",
   },
   {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
+    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+    title: "Burger",
   },
   {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
+    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+    title: "Camera",
   },
   {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
+    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+    title: "Coffee",
   },
   {
-    img: 'https://images.unsplash.com/photo-1627000086207-76eabf23aa2e',
-    title: 'Camping Car',
+    img: "https://images.unsplash.com/photo-1627000086207-76eabf23aa2e",
+    title: "Camping Car",
   },
   {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
+    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+    title: "Hats",
   },
   {
-    img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
+    img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
+    title: "Tomato basil",
   },
   {
-    img: 'https://images.unsplash.com/photo-1627328561499-a3584d4ee4f7',
-    title: 'Mountain',
+    img: "https://images.unsplash.com/photo-1627328561499-a3584d4ee4f7",
+    title: "Mountain",
   },
   {
-    img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
+    img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
+    title: "Bike",
   },
 ];
 export default Profile;
