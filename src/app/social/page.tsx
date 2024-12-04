@@ -24,28 +24,31 @@ const Social = ({ onSelectFriend }: SocialProps) => {
 
   useEffect(() => {
     // Load user status from localStorage if available
-    const storedStatus = localStorage.getItem("userStatus");
-    if (storedStatus) {
-      setSavedStatus(storedStatus);
-    }
+    if (typeof window !== "undefined") {
+      const storedStatus = localStorage.getItem("userStatus");
+      if (storedStatus) {
+        setSavedStatus(storedStatus);
+      }
 
-    // Load friend acceptance status from localStorage
-    const isAccepted = localStorage.getItem(`friendRequestAccepted_Samuel`);
-    if (isAccepted && JSON.parse(isAccepted)) {
-      setFriendStatuses((prevStatuses) => {
-        // Check if Samuel already exists in friendStatuses
-        if (!prevStatuses.some((friend) => friend.name === "Samuel")) {
-          return [
-            ...prevStatuses,
-            {
-              name: "Samuel",
-              status: "Hi I am Samuel!",
-              image: "/Samuel.jpeg",
-            },
-          ];
-        }
-        return prevStatuses;
-      });
+      // Load friend acceptance status from localStorage
+      const isAccepted = localStorage.getItem(`friendRequestAccepted_Samuel`);
+
+      if (isAccepted && JSON.parse(isAccepted)) {
+        setFriendStatuses((prevStatuses) => {
+          // Check if Samuel already exists in friendStatuses
+          if (!prevStatuses.some((friend) => friend.name === "Samuel")) {
+            return [
+              ...prevStatuses,
+              {
+                name: "Samuel",
+                status: "Hi I am Samuel!",
+                image: "/Samuel.jpeg",
+              },
+            ];
+          }
+          return prevStatuses;
+        });
+      }
     }
   }, []);
 
@@ -56,7 +59,9 @@ const Social = ({ onSelectFriend }: SocialProps) => {
   const saveStatus = () => {
     // Save user status to localStorage and update savedStatus
     if (userStatus) {
-      localStorage.setItem("userStatus", userStatus);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("userStatus", userStatus);
+      }
       setSavedStatus(userStatus);
     }
   };
@@ -178,18 +183,20 @@ const Social = ({ onSelectFriend }: SocialProps) => {
 };
 
 const getLastMessage = (friendName: string) => {
-  const storedMessages = localStorage.getItem(`chatMessages_${friendName}`);
-  if (storedMessages) {
-    const messages = JSON.parse(storedMessages);
-    return messages[messages.length - 1].text;
-  } else {
-    // Default last message if no messages in localStorage
-    const initialMessages = {
-      Brian: "I might join you. Let me know when you are about to leave!",
-      Alice: "I was thinking of checking out the new art gallery.",
-    };
-    // @ts-ignore
-    return initialMessages[friendName];
+  if (typeof window !== "undefined") {
+    const storedMessages = localStorage.getItem(`chatMessages_${friendName}`);
+    if (storedMessages) {
+      const messages = JSON.parse(storedMessages);
+      return messages[messages.length - 1].text;
+    } else {
+      // Default last message if no messages in localStorage
+      const initialMessages = {
+        Brian: "I might join you. Let me know when you are about to leave!",
+        Alice: "I was thinking of checking out the new art gallery.",
+      };
+      // @ts-ignore
+      return initialMessages[friendName];
+    }
   }
 };
 
@@ -214,23 +221,25 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
   ]);
 
   useEffect(() => {
-    // Load friend request status from localStorage for Samuel
-    const isAccepted = localStorage.getItem(`friendRequestAccepted_Samuel`);
-    const isDeclined = localStorage.getItem(`friendRequestDeclined_Samuel`);
+    if (typeof window !== "undefined") {
+      // Load friend request status from localStorage for Samuel
+      const isAccepted = localStorage.getItem(`friendRequestAccepted_Samuel`);
+      const isDeclined = localStorage.getItem(`friendRequestDeclined_Samuel`);
 
-    if (isAccepted && JSON.parse(isAccepted)) {
-      setFriendRequests((prevRequests) =>
-        prevRequests.map((request) =>
-          request.name === "Samuel" ? { ...request, accepted: true } : request
-        )
-      );
-    }
+      if (isAccepted && JSON.parse(isAccepted)) {
+        setFriendRequests((prevRequests) =>
+          prevRequests.map((request) =>
+            request.name === "Samuel" ? { ...request, accepted: true } : request
+          )
+        );
+      }
 
-    // Filter out Samuel's request if it was declined
-    if (isDeclined && JSON.parse(isDeclined)) {
-      setFriendRequests((prevRequests) =>
-        prevRequests.filter((request) => request.name !== "Samuel")
-      );
+      // Filter out Samuel's request if it was declined
+      if (isDeclined && JSON.parse(isDeclined)) {
+        setFriendRequests((prevRequests) =>
+          prevRequests.filter((request) => request.name !== "Samuel")
+        );
+      }
     }
   }, []);
 
@@ -242,10 +251,12 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
       )
     );
     if (friendRequests[index].name === "Samuel") {
-      localStorage.setItem(
-        `friendRequestAccepted_Samuel`,
-        JSON.stringify(true)
-      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          `friendRequestAccepted_Samuel`,
+          JSON.stringify(true)
+        );
+      }
     }
   };
 
@@ -256,15 +267,17 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
     setFriendRequests(updatedRequests);
 
     // Persist the declined state in localStorage
-    if (declinedFriend.name === "Samuel") {
-      localStorage.setItem(
-        `friendRequestDeclined_Samuel`,
-        JSON.stringify(true)
-      );
-      localStorage.setItem(
-        `friendRequestAccepted_Samuel`,
-        JSON.stringify(false)
-      );
+    if (typeof window !== "undefined") {
+      if (declinedFriend.name === "Samuel") {
+        localStorage.setItem(
+          `friendRequestDeclined_Samuel`,
+          JSON.stringify(true)
+        );
+        localStorage.setItem(
+          `friendRequestAccepted_Samuel`,
+          JSON.stringify(false)
+        );
+      }
     }
   };
 
@@ -348,49 +361,55 @@ const ChatRoom = ({
 
   // Load messages from localStorage on component mount
   useEffect(() => {
-    const storedMessages = localStorage.getItem(`chatMessages_${friend.name}`);
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
-    } else {
-      const initialMessages = {
-        Brian: [
-          {
-            sender: "friend",
-            text: "Hey Tommy! When will you go to MTV station?",
-          },
-          {
-            sender: "friend",
-            text: "I'm planning to leave around 5 PM. What about you?",
-          },
-          {
-            sender: "me",
-            text: "I might join you. Let me know when you are about to leave!",
-          },
-        ],
-        Alice: [
-          { sender: "friend", text: "Hi Tommy, are you free this weekend?" },
-          {
-            sender: "me",
-            text: "Hey Alice, I might be free on Sunday. What do you have in mind?",
-          },
-          {
-            sender: "friend",
-            text: "I was thinking of checking out the new art gallery.",
-          },
-        ],
-      };
-      // @ts-ignore
-      setMessages(initialMessages[friend.name] || []);
+    if (typeof window !== "undefined") {
+      const storedMessages = localStorage.getItem(
+        `chatMessages_${friend.name}`
+      );
+      if (storedMessages) {
+        setMessages(JSON.parse(storedMessages));
+      } else {
+        const initialMessages = {
+          Brian: [
+            {
+              sender: "friend",
+              text: "Hey Tommy! When will you go to MTV station?",
+            },
+            {
+              sender: "friend",
+              text: "I'm planning to leave around 5 PM. What about you?",
+            },
+            {
+              sender: "me",
+              text: "I might join you. Let me know when you are about to leave!",
+            },
+          ],
+          Alice: [
+            { sender: "friend", text: "Hi Tommy, are you free this weekend?" },
+            {
+              sender: "me",
+              text: "Hey Alice, I might be free on Sunday. What do you have in mind?",
+            },
+            {
+              sender: "friend",
+              text: "I was thinking of checking out the new art gallery.",
+            },
+          ],
+        };
+        // @ts-ignore
+        setMessages(initialMessages[friend.name] || []);
+      }
     }
   }, [friend]);
 
   // Update localStorage whenever messages change
   useEffect(() => {
     if (messages.length > 0) {
-      localStorage.setItem(
-        `chatMessages_${friend.name}`,
-        JSON.stringify(messages)
-      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          `chatMessages_${friend.name}`,
+          JSON.stringify(messages)
+        );
+      }
     }
   }, [messages, friend]);
 
