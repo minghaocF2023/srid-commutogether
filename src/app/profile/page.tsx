@@ -171,14 +171,16 @@ const Profile = () => {
               />
             </>
           ) : (
-            <>
-              <Typography variant="h5">{editableData.name}</Typography>
-              <Typography variant="subtitle1" className="text-slate-500">
-                {editableData.email}
-              </Typography>
-            </>
+            editableData.self && (
+              <>
+                <Typography variant="h5">{editableData.name}</Typography>
+                <Typography variant="subtitle1" className="text-slate-500">
+                  {editableData.email}
+                </Typography>
+              </>
+            )
           )}
-          {!editableData.self && (
+          {!editableData.self && userId !== 1 && (
             <Box>
               {requestSent ? (
                 <StyledButton
