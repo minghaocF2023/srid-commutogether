@@ -5,7 +5,45 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import React from "react";
 import Image from "next/image";
-import { Button, Divider, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
+import StyledLink from "@/components/StyledLink";
+import useLocalStorage from "@/hook/useLocalStorage";
+import { useRouter } from "next/navigation";
+
+type LocationData = {
+  name: string;
+  stampImage: string;
+  image: string;
+  intro: string;
+  collected: boolean;
+};
+
+const data: { [key: string]: LocationData } = {
+  mtv: {
+    name: "Mountain View",
+    stampImage: "/stamps/mtv_stamp.png",
+    image: "/stamps/lib.jpeg",
+    intro:
+      "Mountain View is a city in Santa Clara County, in the San Francisco Bay Area of California. It is named for its views of the Santa Cruz Mountains.",
+    collected: false,
+  },
+  mil: {
+    name: "Millbrae",
+    stampImage: "/stamps/mil_stamp.png",
+    image: "/stamps/mil.jpg",
+    intro: "Millbrae is a city in San Mateo County, California, United States.",
+    collected: false,
+  },
+  sv: {
+    name: "Sunnyvale",
+    stampImage: "/stamps/sv_stamp.png",
+    image: "/stamps/sv.jpg",
+    intro:
+      "Sunnyvale is a city located in Santa Clara County, California, in Silicon Valley.",
+    collected: false,
+  },
+};
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -18,7 +56,7 @@ function CustomTabPanel(props: TabPanelProps) {
   return (
     <div
       role="tabpanel"
-      className="overflow-y-auto mb-10"
+      className="overflow-y-scroll max-h-full mb-10"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -38,22 +76,29 @@ function a11yProps(index: number) {
 
 const Stamps = () => {
   const [value, setValue] = useState(0);
-
+  const [stampData] = useLocalStorage("stampData", data);
+  const router = useRouter();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  const handleView = (location: string) => {
+    if (!stampData[location].collected) {
+      return;
+    }
+
+    router.push(`/stamps/view?location=${location}`);
+  };
+
   return (
-    <div className="w-full p-4">
+    <div className="w-full h-screen p-4 pb-14">
       <div className="flex justify-between items-end mb-5">
         <h1 className="text-2xl">Stamp Collection</h1>
-        <Button
-          sx={{ paddingY: "5px" }}
-          className="text-white"
-          variant="contained"
-        >
-          New Stamp
-        </Button>
+        <StyledLink
+          text="New Stamp"
+          href={"/stamps/collect"}
+          styleType="primary"
+        />
       </div>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -68,20 +113,33 @@ const Stamps = () => {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <span className="mb-2">Mountain View</span>
-        <Stamp />
-        <Stamp />
-        <Stamp />
-
-        <Divider className="my-5" />
-        <span className="mb-2">Mountain View</span>
-        <Stamp />
-        <Stamp />
-        <Stamp />
-        <span className="mb-2">Mountain View</span>
-        <Stamp />
-        <Stamp />
-        <Stamp />
+        {Object.keys(stampData).map((location) => (
+          <Paper className="mb-3" key={location}>
+            <div className="flex justify-between items-center">
+              <div
+                onClick={() => handleView(location)}
+                className={`${
+                  stampData[location].collected ? "" : "grayscale"
+                } flex gap-4 items-center relative`}
+              >
+                <Image
+                  className="rounded-md "
+                  src={stampData[location].image}
+                  alt=""
+                  width={350}
+                  height={100}
+                />
+                <Image
+                  className="rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+                  src={stampData[location].stampImage}
+                  alt=""
+                  width={200}
+                  height={200}
+                />
+              </div>
+            </div>
+          </Paper>
+        ))}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         Item Two
