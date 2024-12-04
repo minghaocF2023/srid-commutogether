@@ -19,8 +19,9 @@ interface PageProps {
 
 const SchedulePage = ({ params }: PageProps) => {
   const router = useRouter();
-  const addSubscription = useSubscriptionStore((state) => state.addSubscription);
   const { stopId } = use(params);
+  const addSubscription = useSubscriptionStore((state) => state.addSubscription);
+  const hasSubscription = useSubscriptionStore((state) => state.hasSubscription);
 
   const routes: Route[] = [
     {
@@ -69,7 +70,8 @@ const SchedulePage = ({ params }: PageProps) => {
       departureTime: route.time,
       arrivalTime: "13:30",
       destination: route.to,
-      date: new Date().toLocaleDateString()
+      date: new Date().toLocaleDateString(),
+      routeId: route.id
     };
     
     addSubscription(subscription);
@@ -85,29 +87,38 @@ const SchedulePage = ({ params }: PageProps) => {
       <h1 className="text-2xl font-semibold mb-6">New Subscription</h1>
 
       <div className="space-y-2">
-        {routes.map((route) => (
-          <div
-            key={route.id}
-            className={`flex items-center justify-between p-3 rounded-lg bg-gray-50
-              ${route.id === "3" ? 'border-2 border-black' : ''}`}
-          >
-            <div className="flex items-center flex-1">
-              <DirectionsTransitIcon className="text-black mr-3" />
-              <div>
-                <div className="text-sm">
-                  {route.from} to {route.to}
-                </div>
-                <div className="text-xs text-gray-500">{route.time}</div>
-              </div>
-            </div>
-            <button
-              onClick={() => handleSubscribe(route)}
-              className="bg-[#FFB800] text-white px-4 py-1.5 rounded-full text-sm"
+        {routes.map((route) => {
+          const isSubscribed = hasSubscription(route.id);
+          
+          return (
+            <div
+              key={route.id}
+              className={`flex items-center justify-between p-3 rounded-lg bg-gray-50
+                ${route.id === "3" ? 'border-2 border-black' : ''}`}
             >
-              Subscribe
-            </button>
-          </div>
-        ))}
+              <div className="flex items-center flex-1">
+                <DirectionsTransitIcon className="text-black mr-3" />
+                <div>
+                  <div className="text-sm">
+                    {route.from} to {route.to}
+                  </div>
+                  <div className="text-xs text-gray-500">{route.time}</div>
+                </div>
+              </div>
+              <button
+                onClick={() => handleSubscribe(route)}
+                disabled={isSubscribed}
+                className={`px-4 py-1.5 rounded-full text-sm
+                  ${isSubscribed 
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                    : 'bg-[#FFB800] text-white hover:bg-[#E5A700]'
+                  }`}
+              >
+                {isSubscribed ? 'Subscribed' : 'Subscribe'}
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       <Header />

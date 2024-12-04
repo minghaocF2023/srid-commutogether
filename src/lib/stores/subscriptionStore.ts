@@ -9,17 +9,19 @@ export interface Subscription {
   arrivalTime: string;
   destination: string;
   date: string;
+  routeId: string;
 }
 
 interface SubscriptionStore {
   subscriptions: Subscription[];
   addSubscription: (subscription: Subscription) => void;
   removeSubscription: (id: string) => void;
+  hasSubscription: (routeId: string) => boolean;
 }
 
 export const useSubscriptionStore = create<SubscriptionStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       subscriptions: [],
       addSubscription: (subscription) =>
         set((state) => ({
@@ -29,6 +31,8 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         set((state) => ({
           subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
         })),
+      hasSubscription: (routeId) => 
+        get().subscriptions.some((sub) => sub.routeId === routeId),
     }),
     {
       name: 'subscription-storage',
