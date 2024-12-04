@@ -42,6 +42,7 @@ const Social = ({ onSelectFriend }: SocialProps) => {
             return [
               ...prevStatuses,
               {
+                id: 1,
                 name: "Samuel",
                 status: "Hi I am Samuel!",
                 image: "/Samuel.jpeg",
