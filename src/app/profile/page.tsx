@@ -298,6 +298,20 @@ const usersData = [
     bio: "Hi I am Sherry I like taking Caltrain!",
     self: false,
   },
+  {
+    name: "Brian Me",
+    email: "Brian@gmail.com",
+    avatar: "Brian.webp",
+    bio: "Hi I am Brian I like taking Caltrain!",
+    self: false,
+  },
+  {
+    name: "Alice Ma",
+    email: "alice@gmail.com",
+    avatar: "Alice.webp",
+    bio: "Hi I am Alice I like taking Caltrain!",
+    self: false,
+  },
 ];
 
 const itemData = [

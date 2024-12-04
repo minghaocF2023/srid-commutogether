@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter to navigate to other pages
+import Link from "next/link";
 
 interface SocialProps {
   onSelectFriend: (friend: {
+    id: number;
     name: string;
     status: string;
     image: string;
@@ -15,10 +17,10 @@ const Social = ({ onSelectFriend }: SocialProps) => {
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [savedStatus, setSavedStatus] = useState<string | null>(null);
   const [friendStatuses, setFriendStatuses] = useState<
-    { name: string; status: string; image: string }[]
+    { id: number, name: string; status: string; image: string }[]
   >([
-    { name: "Brian", status: "I love Caltrain", image: "/Brian.webp" },
-    { name: "Alice", status: "Boring", image: "/Alice.webp" },
+    { id: 3, name: "Brian", status: "I love Caltrain", image: "/Brian.webp" },
+    { id: 4, name: "Alice", status: "Boring", image: "/Alice.webp" },
   ]);
   const router = useRouter(); // Initialize the router
 
@@ -201,6 +203,7 @@ const getLastMessage = (friendName: string) => {
 };
 
 interface Friend {
+  id: number;
   name: string;
   status: string;
   image: string;
@@ -210,9 +213,10 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
   const router = useRouter(); // Initialize the router
 
   const [friendRequests, setFriendRequests] = useState<
-    { name: string; image: string; accepted: boolean; link: string }[]
+    { id: number, name: string; image: string; accepted: boolean; link: string }[]
   >([
     {
+      id: 1,
       name: "Samuel",
       image: "/Samuel.jpeg",
       accepted: false,
@@ -443,11 +447,13 @@ const ChatRoom = ({
             } items-start gap-3 mb-4`}
           >
             {message.sender !== "me" && (
-              <img
-                className="w-10 h-10 rounded-full"
-                src={friend.image}
-                alt={friend.name}
-              />
+              <Link href={`/profile?user=${friend.id}`}>
+                <img
+                  className="w-10 h-10 rounded-full"
+                  src={friend.image}
+                  alt={friend.name}
+                />
+              </Link>
             )}
             <div
               className={`p-3 rounded-lg text-sm ${
