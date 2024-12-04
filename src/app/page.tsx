@@ -24,6 +24,7 @@ const Home = () => {
   const router = useRouter();
   const subscriptions = useSubscriptionStore((state: { subscriptions: Subscription[] }) => state.subscriptions);
   const [aspectRatio, setAspectRatio] = useState<number>(2); // default 2:1 ratio
+  const [showPreferences, setShowPreferences] = useState(false);
 
   // Calculate the width of the container
   useEffect(() => {
@@ -36,6 +37,10 @@ const Home = () => {
     window.addEventListener('resize', updateAspectRatio);
     return () => window.removeEventListener('resize', updateAspectRatio);
   }, []);
+
+  const handleEditPreference = () => {
+    setShowPreferences(true);
+  };
 
   return (
     <div className="min-h-screen p-4 pb-20 bg-white">
@@ -50,13 +55,16 @@ const Home = () => {
       {/* Transportation Preference */}
       <div className="mb-6">
         <p className="text-sm text-gray-500">Transportation Preference</p>
-        <div className="flex justify-between items-center mt-2">
-          <h2 className="text-2xl font-bold">Caltrain</h2>
-          <button className="bg-[#FFB800] text-white px-4 py-1 rounded-full text-sm">
-            Edit Preference
-          </button>
-        </div>
-        <div className="mt-3">
+        <div className="flex justify-between items-center mt-2 bg-white rounded-lg border border-[#FFB800] p-4">
+          <div>
+            <h2 className="text-2xl font-bold">Caltrain</h2>
+            <button 
+              onClick={handleEditPreference}
+              className="bg-[#FFB800] text-white px-4 py-1 rounded-full text-sm mt-2"
+            >
+              Edit Preference
+            </button>
+          </div>
           <div className="w-20 h-20 rounded-full overflow-hidden">
             <Image
               src="/caltrain.jpg"
@@ -68,6 +76,66 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* Preference Selection Modal */}
+      {showPreferences && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-4 w-[90%] max-w-md">
+            <h3 className="text-xl font-semibold mb-4">Preference Setting</h3>
+            
+            {/* Caltrain Option */}
+            <div className="border-2 border-[#FFB800] rounded-lg p-4 mb-3 flex justify-between items-center">
+              <span className="text-lg">Caltrain</span>
+              <Image
+                src="/caltrain.jpg"
+                alt="Caltrain"
+                width={60}
+                height={60}
+                className="rounded-lg"
+              />
+            </div>
+
+            {/* Disabled Options */}
+            <div className="border rounded-lg p-4 mb-3 flex justify-between items-center opacity-50">
+              <span className="text-lg">Bart</span>
+              <Image
+                src="/bart.jpg"
+                alt="Bart"
+                width={60}
+                height={60}
+                className="rounded-lg"
+              />
+            </div>
+
+            <div className="border rounded-lg p-4 mb-6 flex justify-between items-center opacity-50">
+              <span className="text-lg">Bus</span>
+              <Image
+                src="/bus.jpg"
+                alt="Bus"
+                width={60}
+                height={60}
+                className="rounded-lg"
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex justify-between gap-4">
+              <button 
+                onClick={() => setShowPreferences(false)}
+                className="flex-1 py-2 bg-gray-200 rounded-lg"
+              >
+                Back
+              </button>
+              <button 
+                onClick={() => setShowPreferences(false)}
+                className="flex-1 py-2 bg-[#FFB800] text-white rounded-lg"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Memory Section */}
       <div className="mb-6">
