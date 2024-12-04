@@ -1,39 +1,124 @@
 "use client"
 import Image from 'next/image'
-import { Avatar, Alert, Typography, ImageList, ImageListItem } from "@mui/material";
-import Masonry from '@mui/lab/Masonry';
+import { Avatar, Alert, Box, Typography, ImageList, ImageListItem, Snackbar, SnackbarCloseReason } from "@mui/material";
 import StyledLink from "@/components/StyledLink";
+import { useState, useEffect } from 'react';
+import StyledButton from '@/components/StyledButton';
+import { useSearchParams, notFound } from 'next/navigation';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+
+type UserData = {
+  name: string;
+  email: string;
+  avatar: string;
+  bio: string;
+  self: boolean;
+}
 
 const Profile = () => {
+  const searchParams = useSearchParams();
+  const user: string | null = searchParams.get('user');
+  const userId: number = user ? +user : 0;
+  let userData: UserData;
+  if (userId < usersData.length) {
+    userData = usersData[userId];
+  } else {
+    notFound();
+  }
+
+  const [edit, setEdit] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [requestSent, setRequestSent] = useState<boolean>(() => {
+    // Check if the request status is saved in localStorage for this user
+    const savedRequestStatus = localStorage.getItem(`requestSent_${userId}`);
+    return savedRequestStatus ? JSON.parse(savedRequestStatus) : false;
+  });
+
+  useEffect(() => {
+    // Persist the request status in localStorage when it changes
+    localStorage.setItem(`requestSent_${userId}`, JSON.stringify(requestSent));
+  }, [requestSent, userId]);
+
+  const handleUnimplemented = () => {
+    setOpen(true);
+  };
+
+  const handleSendRequest = () => {
+    setRequestSent(true);
+  };
+
+  const handleClose = (
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
-    <div className="w-full p-4 overflow-hidden">
+    <div className="w-full h-screen p-4 pb-14">
       <div className="flex justify-between items-end mb-5">
         <h1 className="text-2xl">Profile</h1>
-        <StyledLink
+        <StyledButton
+          className={(edit || !userData.self) ? 'invisible' : ''}
           text="Settings"
-          href={"/stamps/collect"}
+          onClick={() => setEdit(true)}
           styleType="primary"
         />
       </div>
-      <div className="flex justify-stretch pb-5">
-        <Avatar alt="Tommy" src="Tommy_Flanagan.webp" sx={{ width: 120, height: 120 }} />
+      <div className="flex justify-stretch mb-4 h-[120px]">
+        <Avatar alt={userData.name} src={userData.avatar} sx={{ width: 120, height: 120 }} />
         <div className="flex flex-col justify-start m-5">
           <Typography variant="h5">
-            Tommy Chan
+            {userData.name} {edit && '✎'}
           </Typography>
           <Typography variant="subtitle1" className="text-slate-500">
-            tommy@google.com
+            {userData.email}
           </Typography>
+          {userData.self ?
+            (edit && <StyledButton
+              text="Change Profile"
+              onClick={handleUnimplemented}
+              styleType='primary'
+            />) :
+            <Box>
+              {requestSent ? (
+                <StyledButton
+                  className="me-2"
+                  text="Requested"
+                  styleType='secondary' // Different color to indicate request has been sent
+                />
+              ) : (
+                <StyledButton
+                  className="me-2"
+                  text="Send Request"
+                  onClick={handleSendRequest}
+                  styleType='primary'
+                />
+              )}
+              <PersonAddAltIcon />
+            </Box>
+          }
         </div>
       </div>
       <div className="flex flex-col justify-stretch pb-4">
-        <Typography variant="subtitle1">Bio</Typography>
+        <Typography variant="subtitle1">Bio {edit && '✎'}</Typography>
         <Alert icon={false} severity="info">
-          Hi I am Tommy I like taking Caltrain!
+          {userData.bio}
         </Alert>
       </div>
       <div className="flex flex-col justify-stretch pb-4">
-        <Typography variant="subtitle1">Public Album</Typography>
+        <div className='flex h-max justify-between'>
+          <Typography variant="subtitle1">Public Album</Typography>
+          {edit && <StyledButton
+            className={edit ? '' : 'invisible'}
+            text='Add new'
+            onClick={handleUnimplemented}
+            styleType='primary'
+          />}
+        </div>
         <ImageList sx={{ height: 390 }} cols={3} rowHeight={164}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
@@ -46,15 +131,52 @@ const Profile = () => {
             </ImageListItem>
           ))}
         </ImageList>
+        <Snackbar
+          open={open}
+          autoHideDuration={1000}
+          onClose={handleClose}
+          message="Not implemented"
+        />
       </div>
-      <StyledLink
-        text='Back to Home'
-        styleType='secondary'
-        href={"/"}
-      />
+      {edit ?
+        <div className='flex justify-between'>
+          <StyledButton text='Back' styleType='secondary' onClick={() => setEdit(false)} />
+          <StyledButton text='Save' styleType='primary' onClick={() => setEdit(false)} />
+        </div> :
+        <StyledLink
+          text='Back'
+          styleType='secondary'
+          href={'/social'}
+        />
+      }
     </div>
   );
 };
+
+
+const usersData = [
+  {
+    name: 'Tommy Chan',
+    email: 'tommy@google.com',
+    avatar: "Tommy_Flanagan.webp",
+    bio: 'Hi I am Tommy I like taking Caltrain!',
+    self: true,
+  },
+  {
+    name: 'Samuel Lin',
+    email: 'samuel@gmail.com',
+    avatar: "Samuel.jpeg",
+    bio: 'Hi I am Samuel I like taking Caltrain!',
+    self: false,
+  },
+  {
+    name: 'Sherry Hsu',
+    email: 'sherry@gmail.com',
+    avatar: "Sherry.jpg",
+    bio: 'Hi I am Sherry I like taking Caltrain!',
+    self: false,
+  },
+]
 
 const itemData = [
   {
@@ -127,4 +249,3 @@ const itemData = [
   },
 ];
 export default Profile;
-

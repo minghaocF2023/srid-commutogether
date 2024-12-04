@@ -3,17 +3,8 @@ import Link from "next/link";
 
 interface StyledLinkProps {
   text: string;
-
   href: string | object;
-  styleType:
-    | "inherit"
-    | "primary"
-    | "secondary"
-    | "success"
-    | "error"
-    | "info"
-    | "warning"
-    | undefined;
+  styleType: | "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" | undefined;
   variant?: "contained" | "outlined" | "text";
   className?: string;
 }

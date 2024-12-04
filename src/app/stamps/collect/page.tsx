@@ -44,7 +44,7 @@ const Collect = () => {
   const [location, setLocation] = useState<string | null>(null);
   const [collected, setCollected] = useState(false);
   const searchParams = useSearchParams();
-  const [_, setStampData] = useLocalStorage("stampData", data);
+  const [, setStampData] = useLocalStorage("stampData", data);
 
   useEffect(() => {
     if (searchParams.has("location")) {
@@ -55,7 +55,6 @@ const Collect = () => {
   }, [searchParams]);
 
   const handleCollect = () => {
-    console.log("Collected!");
     setStampData((prevData) => {
       const updatedData = { ...prevData };
       updatedData[location!].collected = true;

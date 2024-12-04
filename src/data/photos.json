@@ -1,0 +1,65 @@
+{
+  "albums": [
+    {
+      "albumId": "f9fdba86-d68a-4730-9172-24eef2bf6051",
+      "name": "682 Villa Street, Mountain View, California 94041, United States",
+      "photos": [
+        {
+          "photoId": "c7b15706-4454-40e5-a397-3cbbe82cfcac",
+          "photoUrl": "/photos/myphoto1.JPG",
+          "latitude": 37.392966666666666,
+          "longitude": -122.07684444444445,
+          "location": "682 Villa Street, Mountain View, California 94041, United States",
+          "isUserUpload": true
+        },
+        {
+          "photoId": "ff5e7ac0-029b-4470-a2ea-6a4d143048e2",
+          "photoUrl": "/photos/photo5.JPG",
+          "latitude": 37.39357777777778,
+          "longitude": -122.08003888888888,
+          "location": "Wild Cherry Lane, Mountain View, California 94041, United States",
+          "isUserUpload": false
+        },
+        {
+          "photoId": "a2ebe10e-b22e-40af-8f87-d4fbf08faa1c",
+          "photoUrl": "/photos/photo2.JPG",
+          "latitude": 37.39264722222222,
+          "longitude": -122.07605,
+          "location": "515 Villa Street, Mountain View, California 94041, United States",
+          "isUserUpload": false
+        }
+      ],
+      "containsUserUploads": true
+    },
+    {
+      "albumId": "e07fb5a0-61cd-4c98-a1ec-b47b1f2ce8f3",
+      "name": "790 East El Camino Real, Mountain View, California 94040, United States",
+      "photos": [
+        {
+          "photoId": "4a1f6847-2ba3-413c-8ffc-ed773242d1fa",
+          "photoUrl": "/photos/myphoto3.JPG",
+          "latitude": 37.37677222222222,
+          "longitude": -122.064225,
+          "location": "790 East El Camino Real, Mountain View, California 94040, United States",
+          "isUserUpload": true
+        }
+      ],
+      "containsUserUploads": true
+    },
+    {
+      "albumId": "a957a385-1b60-4b1f-a896-945b4636daab",
+      "name": "Computer History Museum, 1401 N Shoreline Blvd, Mountain View, California 94043, United States",
+      "photos": [
+        {
+          "photoId": "28d8e9e3-aa02-431c-8815-03e35e8e24d7",
+          "photoUrl": "/photos/photo4.JPG",
+          "latitude": 37.414325,
+          "longitude": -122.07710277777777,
+          "location": "Computer History Museum, 1401 N Shoreline Blvd, Mountain View, California 94043, United States",
+          "isUserUpload": false
+        }
+      ],
+      "containsUserUploads": false
+    }
+  ]
+}
