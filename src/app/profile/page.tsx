@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { Avatar, Alert, Box, Typography, ImageList, ImageListItem, Snackbar, SnackbarCloseReason } from "@mui/material";
 import StyledLink from "@/components/StyledLink";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StyledButton from '@/components/StyledButton';
 import { useSearchParams, notFound } from 'next/navigation';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
@@ -25,11 +25,26 @@ const Profile = () => {
   } else {
     notFound();
   }
+
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
+  const [requestSent, setRequestSent] = useState<boolean>(() => {
+    // Check if the request status is saved in localStorage for this user
+    const savedRequestStatus = localStorage.getItem(`requestSent_${userId}`);
+    return savedRequestStatus ? JSON.parse(savedRequestStatus) : false;
+  });
+
+  useEffect(() => {
+    // Persist the request status in localStorage when it changes
+    localStorage.setItem(`requestSent_${userId}`, JSON.stringify(requestSent));
+  }, [requestSent, userId]);
 
   const handleUnimplemented = () => {
     setOpen(true);
+  };
+
+  const handleSendRequest = () => {
+    setRequestSent(true);
   };
 
   const handleClose = (
@@ -69,12 +84,20 @@ const Profile = () => {
               styleType='primary'
             />) :
             <Box>
-              <StyledButton
-                className='me-2'
-                text="Send Request"
-                onClick={handleUnimplemented}
-                styleType='primary'
-              />
+              {requestSent ? (
+                <StyledButton
+                  className="me-2"
+                  text="Requested"
+                  styleType='secondary' // Different color to indicate request has been sent
+                />
+              ) : (
+                <StyledButton
+                  className="me-2"
+                  text="Send Request"
+                  onClick={handleSendRequest}
+                  styleType='primary'
+                />
+              )}
               <PersonAddAltIcon />
             </Box>
           }
@@ -108,22 +131,22 @@ const Profile = () => {
             </ImageListItem>
           ))}
         </ImageList>
-      <Snackbar
-        open={open}
-        autoHideDuration={1000}
-        onClose={handleClose}
-        message="Not implemented"
-      />
+        <Snackbar
+          open={open}
+          autoHideDuration={1000}
+          onClose={handleClose}
+          message="Not implemented"
+        />
       </div>
-      {edit ? 
+      {edit ?
         <div className='flex justify-between'>
-          <StyledButton text='Back' styleType='secondary' onClick={() => setEdit(false)}/>
-          <StyledButton text='Save' styleType='primary' onClick={() => setEdit(false)}/>
+          <StyledButton text='Back' styleType='secondary' onClick={() => setEdit(false)} />
+          <StyledButton text='Save' styleType='primary' onClick={() => setEdit(false)} />
         </div> :
         <StyledLink
-          text='Back to Home'
+          text='Back'
           styleType='secondary'
-          href={'/'}
+          href={'/social'}
         />
       }
     </div>
@@ -140,21 +163,21 @@ const usersData = [
     self: true,
   },
   {
-    name: 'Alice Chan',
-    email: 'alicec@gmail.com',
-    avatar: "Alice.webp",
-    bio: 'Hi I am Alice I like taking Caltrain!',
+    name: 'Samuel Lin',
+    email: 'samuel@gmail.com',
+    avatar: "Samuel.jpeg",
+    bio: 'Hi I am Samuel I like taking Caltrain!',
     self: false,
   },
   {
-    name: 'Brian Chan',
-    email: 'brian@gmail.com',
-    avatar: "Brian.webp",
-    bio: 'Hi I am Brian I like taking Caltrain!',
+    name: 'Sherry Hsu',
+    email: 'sherry@gmail.com',
+    avatar: "Sherry.jpg",
+    bio: 'Hi I am Sherry I like taking Caltrain!',
     self: false,
   },
 ]
-  
+
 const itemData = [
   {
     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
@@ -226,4 +249,3 @@ const itemData = [
   },
 ];
 export default Profile;
-

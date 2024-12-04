@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter to navigate to other pages
 
 interface SocialProps {
   onSelectFriend: (friend: { name: string; status: string; image: string }) => void;
@@ -9,6 +10,7 @@ interface SocialProps {
 const Social = ({ onSelectFriend }: SocialProps) => {
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [savedStatus, setSavedStatus] = useState<string | null>(null);
+  const router = useRouter(); // Initialize the router
 
   useEffect(() => {
     // Load user status from localStorage if available
@@ -36,12 +38,12 @@ const Social = ({ onSelectFriend }: SocialProps) => {
   ];
 
   const nearbyUsers = [
-    { name: 'Samuel', image: 'Samuel.jpeg' },
-    { name: 'Sherry', image: 'Sherry.jpg' },
+    { name: 'Samuel', image: 'Samuel.jpeg', link: 'http://localhost:3000/profile?user=1' },
+    { name: 'Sherry', image: 'Sherry.jpg', link: 'http://localhost:3000/profile?user=2' },
   ];
 
-  const handleNearbyUserClick = (userName: string) => {
-    console.log(`Nearby user clicked: ${userName}`);
+  const handleNearbyUserClick = (link: string) => {
+    router.push(link); // Navigate to the user's profile page
   };
 
   return (
@@ -124,7 +126,7 @@ const Social = ({ onSelectFriend }: SocialProps) => {
           <div
             key={index}
             className="flex items-center gap-3 p-3 border-b border-gray-200 cursor-pointer"
-            onClick={() => handleNearbyUserClick(user.name)}
+            onClick={() => handleNearbyUserClick(user.link)}
           >
             <img className="w-10 h-10 bg-gray rounded-full" src={user.image} alt={user.name} />
             <span className="text-base font-medium">{user.name}</span>
@@ -200,7 +202,8 @@ const ChatRoom = ({ friend, onBack }: { friend: Friend; onBack: () => void }) =>
   return (
     <div className="flex flex-col h-full">
       <header className="flex justify-between items-center p-4 bg-white border-b">
-        <button className="text-sm absolute left-4" onClick={onBack}><h2 className="text-lg font-bold mx-auto">&lt; {friend.name}</h2></button>
+        <button className="text-sm absolute left-4" onClick={onBack}>&lt;</button>
+        <h2 className="text-lg font-bold mx-auto">{friend.name}</h2>
         {friend.name === 'Brian' && (
           <span className="text-xs text-gray-500 mx-auto mt-1">
             You have the same schedule with {friend.name}!
