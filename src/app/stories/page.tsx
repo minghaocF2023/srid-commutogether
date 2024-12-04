@@ -1,35 +1,53 @@
 "use client"
-import Link from "next/link";
-import { Button, Box, Typography, ImageList, ImageListItem } from '@mui/material';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import { useRouter } from 'next/navigation';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import albums from '../../data/photos.json';
+import Link from "next/link";
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import { Button, Box, Typography, ImageList, ImageListItem } from '@mui/material';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from 'swiper/modules';
 
 const Home = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const albumId: string | null = searchParams.get('id');
+  let photosData, hasUserStory;
+  for (const album of albums['albums']) {
+    if (album['albumId'] === albumId) {
+      photosData = album['photos'];
+      hasUserStory = album['containsUserUploads'];
+      break;
+    }
+  }
+  if (!photosData) {
+    notFound();
+  }
+
   return (
     <Box className="w-full h-screen p-4 pb-14">
       <Box>
         <Button onClick={() => router.back()} variant="text" color="inherit">Back To Map</Button>
       </Box>
-      <Box>
+      <Box className="flex justify-between">
         <Typography variant="h4">
           Mountain View
         </Typography>
+        <Link href="/story">
+          <ControlPointIcon fontSize="large"/>
+        </Link>
       </Box>
-      <Box className="flex flex-col" >
+      {hasUserStory && <Box className="flex flex-col" >
         <Typography variant="h6">
           My Story
         </Typography>
         <Box className="w-full" >
           <Swiper
-            className='h-[100px]'
+            className='h-[150px]'
             slidesPerView={2}
-            spaceBetween={30}
+            spaceBetween={10}
             navigation={true}
             centeredSlides={true}
             pagination={{
@@ -37,23 +55,27 @@ const Home = () => {
             }}
             modules={[Pagination, Navigation]}
           >
-            <SwiperSlide>1</SwiperSlide>
-            <SwiperSlide>2</SwiperSlide>
-            <SwiperSlide>3</SwiperSlide>
-            <SwiperSlide><ControlPointIcon/></SwiperSlide>
+            {photosData.map((item) => (item.isUserUpload &&
+              <SwiperSlide key={item.photoId}>
+                <img
+                  src={item.photoUrl}
+                  alt={item.location}
+                  loading="lazy"
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </Box>
-      </Box>
+      </Box>}
       <Typography variant="h6">
         Explore
       </Typography>
-      <ImageList sx={{ height: 390 }} cols={2} rowHeight={164}>
-        {itemData.map((item) => (
-          <ImageListItem key={item.img}>
+      <ImageList variant="masonry" cols={2} gap={10}>
+        {photosData.map((item) => (!item.isUserUpload &&
+          <ImageListItem key={item.photoId}>
             <img
-              srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-              alt={item.title}
+              src={item.photoUrl}
+              alt={item.location}
               loading="lazy"
             />
           </ImageListItem>
@@ -62,13 +84,6 @@ const Home = () => {
     </Box>
   );
 };
-
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-  },
-]
 
 export default Home;
 
