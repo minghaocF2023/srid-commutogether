@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import Image from "next/image";
 import useLocalStorage from "@/hook/useLocalStorage";
@@ -26,6 +26,7 @@ const SimulateBumpPage = () => {
 
   // State for handling loading state during bump simulation
   const [isBumping, setIsBumping] = useState<boolean>(false); // Initially false
+  const hasMounted = useRef(false);
 
   // Function to handle bump simulation
   const simulateBump = () => {
@@ -41,7 +42,12 @@ const SimulateBumpPage = () => {
 
   // Effect to simulate bump when component mounts
   useEffect(() => {
-  }, []); // Run once on mount
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      simulateBump();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Effect to handle bumpCountWithAlice reaching its limit
   useEffect(() => {
@@ -126,16 +132,24 @@ const SimulateBumpPage = () => {
             {/* With Alice Count */}
             <Typography variant="h6" color="text.secondary">
               With Alice: {bumpCountWithAlice}/{bumpLimitWithAlice}{" "}
-              {getHeartEmoji(bumpCountWithAlice, bumpLimitWithAlice)}
+              {getHeartEmoji(bumpCountWithAlice)}
             </Typography>
 
             {/* Total Bump Count */}
             <Typography variant="h6" color="text.secondary" mt={1}>
               Total BUMP🍻: {totalBumpCount}/{totalBumpLimit}{" "}
-              {getHeartEmoji(totalBumpCount, totalBumpLimit)}
+              {getHeartEmoji(totalBumpCount)}
             </Typography>
           </Box>
 
+          {/* Button to Simulate Another Bump */}
+          <StyledButton
+            text="Again"
+            onClick={simulateBump}
+            styleType="primary"
+            variant="contained"
+            className="mt-4"
+          />
         </>
       )}
     </Box>
