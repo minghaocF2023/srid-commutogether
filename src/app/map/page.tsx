@@ -1,130 +1,89 @@
 "use client";
-import React, { useRef, useCallback } from "react";
-import Map, { MapRef } from "react-map-gl";
+import React, { useRef, useCallback, useState } from "react";
+import Map, { MapRef, Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import photoData from "@/data/photos.json";
+import { setupMap } from "@/utils/mapSetup";
 
 const MapPage = () => {
-  const mapRef = useRef<MapRef | null>(null); // Create a ref for the Map instance
+  const mapRef = useRef<MapRef | null>(null);
 
-  // const onMapIdle = useCallback((map: any) => {
-  //   console.log("Map idle");
-  //   const routeFeatures = map.queryRenderedFeatures({
-  //     layers: ["transitland-rail-routes-layer"], // ID of the routes layer
-  //   });
-
-  //   const nameFeatures = map.queryRenderedFeatures({
-  //     layers: ["transitland-route-names-layer"], // ID of the route names layer
-  //   });
-
-  //   console.log("Name features:");
-  //   console.log(nameFeatures);
-
-  //   console.log("Route features:");
-  //   console.log(routeFeatures);
-
-  //   console.log(
-  //     routeFeatures.map((feature) => feature.properties?.route_color)
-  //   );
-  //   console.log(
-  //     routeFeatures.map((feature) => feature.properties?.route_long_name)
-  //   );
-  // }, []);
-
-  // Callback to handle map load event
   const onMapLoad = useCallback(() => {
-    if (!mapRef.current) return; // Ensure mapRef is available
-    const map = mapRef.current.getMap(); // Get the actual Mapbox GL map instance
-
-    console.log("Map loaded");
-
-    // Add Transitland routes source
-    map.addSource("transitland-routes", {
-      type: "vector",
-      tiles: [
-        `https://transit.land/api/v2/tiles/routes/tiles/{z}/{x}/{y}.pbf?apikey=${process.env.NEXT_PUBLIC_TRANSITLAND_API_KEY}`,
-      ],
-      maxzoom: 10,
-    });
-
-    // Add routes layer with dynamic route color
-    map.addLayer({
-      id: "transitland-rail-routes-layer",
-      type: "line",
-      source: "transitland-routes",
-      "source-layer": "routes", // Ensure this matches the actual source-layer name in the Transitland vector tiles
-      filter: ["in", "route_type", 0, 1, 2], // Filter for train, subway, and tram routes
-      paint: {
-        "line-color": [
-          "case",
-          ["has", "route_color"], // Check if the route has a route_color property
-          [
-            "match", // Dynamically adjust specific colors
-            ["get", "route_color"],
-            "#dcddde", // Example: replace light gray
-            "#3399ff", // Replace light gray with vivid blue
-            "#bfbfbf", // Example: another problematic color
-            "#ff4500", // Replace with orange
-            ["get", "route_color"], // Default to the original route_color
-          ],
-          "black", // Default to black if route_color is missing
-        ],
-        "line-opacity": 0.6,
-        "line-width": 2,
-      },
-      minzoom: 8,
-    });
-
-    // Add route names as a symbol layer
-    map.addLayer({
-      id: "transitland-route-names-layer",
-      type: "symbol",
-      source: "transitland-routes",
-      "source-layer": "routes", // Ensure this matches the actual source-layer name in the Transitland vector tiles
-      filter: ["in", "route_type", 0, 1, 2], // Filter for train, subway, and tram routes
-      layout: {
-        "text-field": [
-          "coalesce",
-          ["get", "route_long_name"], // Use long name if available
-          ["concat", ["get", "agency_name"], " ", ["get", "route_short_name"]], // Fallback to agency + short name
-        ],
-        "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"], // Font family
-        "text-size": 12, // Font size
-        "symbol-placement": "line", // Align text along the route line
-        "text-anchor": "center", // Center-align the text
-      },
-      paint: {
-        "text-color": "#000000", // Text color
-        "text-halo-color": "#ffffff", // Halo color for better readability
-        "text-halo-width": 1, // Halo width
-      },
-      minzoom: 12,
-    });
-
-    // const idleHandler = () => {
-    //   onMapIdle(map);
-    //   // Remove the idle event listener after execution
-    //   map.off("idle", idleHandler);
-    // };
-
-    // map.on("idle", idleHandler); // Attach the idle event listener
+    if (!mapRef.current) return;
+    const map = mapRef.current.getMap();
+    setupMap(map);
   }, []);
 
   return (
     <div>
       <Map
-        ref={mapRef} // Attach the ref to the Map component
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN} // Use your Mapbox access token
+        ref={mapRef}
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
         initialViewState={{
-          longitude: -122.4,
-          latitude: 37.77,
+          longitude: -122.07,
+          latitude: 37.39,
           zoom: 12,
         }}
         minZoom={0}
         maxZoom={18}
         style={{ width: "100vw", height: "100vh" }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
-        onLoad={onMapLoad} // Handle map load event
-      />
+        onLoad={onMapLoad}
+      >
+        {photoData.albums.map((album: any) => (
+          <Marker
+            key={album.name}
+            longitude={album.photos[0].longitude}
+            latitude={album.photos[0].latitude}
+            anchor="center"
+          >
+            <div style={{ position: "relative", textAlign: "center" }}>
+              {/* Marker Image */}
+              <img
+                src={album.photos[0].photoUrl}
+                alt={album.name}
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  borderRadius: "50%",
+                  border: "3px solid #ff0000",
+                  cursor: "pointer",
+                  objectFit: "cover",
+                  boxShadow: "0 0 5px rgba(0,0,0,0.5)",
+                }}
+              />
+              {/* Name on Hover */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-30px", // Position below the marker
+                  left: "50%",
+                  transform: "translateX(-50%)", // Center text
+                  background: "rgba(0, 0, 0, 0.8)",
+                  color: "#fff",
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                  whiteSpace: "nowrap",
+                  opacity: 0, // Initially hidden
+                  transition: "opacity 0.3s", // Smooth hover effect
+                }}
+                className="album-name"
+              >
+                {album.name}
+              </div>
+            </div>
+          </Marker>
+        ))}
+      </Map>
+      <style jsx>{`
+        .album-name:hover {
+          opacity: 1 !important;
+        }
+        div img:hover + .album-name {
+          opacity: 1 !important;
+        }
+      `}</style>
     </div>
   );
 };
