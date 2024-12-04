@@ -1,10 +1,9 @@
 "use client"
-import Image from 'next/image'
 import { Avatar, Alert, Box, Typography, ImageList, ImageListItem, Snackbar, SnackbarCloseReason } from "@mui/material";
 import StyledLink from "@/components/StyledLink";
 import { useState, useEffect } from 'react';
 import StyledButton from '@/components/StyledButton';
-import { useSearchParams, notFound } from 'next/navigation';
+import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
 type UserData = {
@@ -16,6 +15,7 @@ type UserData = {
 }
 
 const Profile = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const user: string | null = searchParams.get('user');
   const userId: number = user ? +user : 0;
@@ -143,10 +143,10 @@ const Profile = () => {
           <StyledButton text='Back' styleType='secondary' onClick={() => setEdit(false)} />
           <StyledButton text='Save' styleType='primary' onClick={() => setEdit(false)} />
         </div> :
-        <StyledLink
+        <StyledButton
           text='Back'
           styleType='secondary'
-          href={'/social'}
+          onClick={() => router.back()}
         />
       }
     </div>
