@@ -1,5 +1,6 @@
 import os
 import json
+import uuid
 from PIL import Image, ExifTags
 import requests
 from dotenv import load_dotenv
@@ -95,6 +96,7 @@ def process_photos():
             location = reverse_geocode(exif_data["latitude"], exif_data["longitude"])
             is_user_upload = "my" in file_name.lower()  # For demo purposes, assume photos with "my" in the filename are user uploads
             photo_metadata.append({
+                "photoId": str(uuid.uuid4()),
                 "photoUrl": f"/photos/{file_name}",
                 "latitude": exif_data["latitude"],
                 "longitude": exif_data["longitude"],
@@ -110,6 +112,7 @@ def process_photos():
         album_name = reverse_geocode(photos[0]["latitude"], photos[0]["longitude"])
         contains_user_uploads = any(photo["isUserUpload"] for photo in photos)
         albums.append({
+            "albumId": str(uuid.uuid4()),
             "name": album_name,
             "photos": photos,
             "containsUserUploads": contains_user_uploads
