@@ -5,18 +5,102 @@ import Header from "@/components/Header";
 import { useSubscriptionStore } from "@/lib/stores/subscriptionStore";
 import type { Subscription } from "@/lib/stores/subscriptionStore";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+// Define the memory images directly
+const memoryImages = [
+  { id: 1, src: '/memories/memory1.jpg', width: 800, height: 600 },
+  { id: 2, src: '/memories/memory2.jpeg', width: 800, height: 600 },
+  { id: 3, src: '/memories/memory3.jpg', width: 800, height: 600 },
+  { id: 4, src: '/memories/memory4.jpeg', width: 800, height: 600 }
+];
 
 const Home = () => {
   const router = useRouter();
   const subscriptions = useSubscriptionStore((state: { subscriptions: Subscription[] }) => state.subscriptions);
+  const [aspectRatio, setAspectRatio] = useState<number>(2); // default 2:1 ratio
+
+  // Calculate the width of the container
+  useEffect(() => {
+    const updateAspectRatio = () => {
+      const width = window.innerWidth - 32;
+      setAspectRatio(width / (width * 0.4)); // Reduced height ratio to 0.4
+    };
+
+    updateAspectRatio();
+    window.addEventListener('resize', updateAspectRatio);
+    return () => window.removeEventListener('resize', updateAspectRatio);
+  }, []);
 
   return (
     <div className="min-h-screen p-4 pb-20 bg-white">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <p className="text-xl">Hi, Tommy</p>
+        <h1 className="text-xl">Hi, Tommy</h1>
         <Link href="/profile">
           <Avatar alt="Tommy" src="Tommy_Flanagan.webp" sx={{ width: 56, height: 56 }} />
         </Link>
+      </div>
+
+      {/* Transportation Preference */}
+      <div className="mb-6">
+        <p className="text-sm text-gray-500">Transportation Preference</p>
+        <div className="flex justify-between items-center mt-2">
+          <h2 className="text-2xl font-bold">Caltrain</h2>
+          <button className="bg-[#FFB800] text-white px-4 py-1 rounded-full text-sm">
+            Edit Preference
+          </button>
+        </div>
+        <div className="mt-3">
+          <div className="w-20 h-20 rounded-full overflow-hidden">
+            <Image
+              src="/caltrain.jpg"
+              alt="Caltrain"
+              width={80}
+              height={80}
+              className="object-cover w-full h-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Memory Section */}
+      <div className="mb-6">
+        <p className="text-sm text-gray-500">Memory</p>
+        <div className="mt-2 rounded-2xl overflow-hidden">
+          <Swiper
+            modules={[Pagination]}
+            pagination={{
+              clickable: true,
+            }}
+            className="w-full aspect-[16/9]"
+            loop={true}
+          >
+            {memoryImages.map((memory) => (
+              <SwiperSlide key={memory.id} className="w-full h-full">
+                <div className="relative w-full h-full bg-gray-100">
+                  <Image
+                    src={memory.src}
+                    alt={`Memory ${memory.id}`}
+                    fill
+                    style={{ 
+                      objectFit: 'contain',
+                      backgroundColor: 'rgb(243 244 246)',
+                      padding: '4px'
+                    }}
+                    sizes="(max-width: 768px) 100vw"
+                    className="hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
 
       {/* Subscription */}
