@@ -15,30 +15,57 @@ const StoryPage = () => {
     }
   };
 
+  // Placeholder function for posting the story
+  const postStory = () => {
+    // Implement your post story logic here
+    console.log("Story posted!");
+    // Reset the image after posting if needed
+    setImage(null);
+  };
+
   return (
-    <div className="w-full h-full flex flex-col items-center">
+    <div className="w-full h-screen relative">
       {image ? (
-        <img src={image} alt="Captured" className="w-full h-auto" />
+        <img src={image} alt="Captured" className="w-full h-full object-cover" />
       ) : (
         <Camera
           ref={camera}
-          aspectRatio={16 / 9}
           facingMode="environment"
+          className="w-full h-full object-cover"
         />
       )}
-      <StyledButton
-        text={image ? "Retake Photo" : "Take Photo"}
-        onClick={() => {
-          if (image) {
-            setImage(null);
-          } else {
-            takePhoto();
-          }
-        }}
-        styleType="primary"
-        variant="contained"
-        className="mt-4"
-      />
+
+      {/* Button Container */}
+      <div className="absolute bottom-16 w-full flex justify-center">
+        {image ? (
+          <>
+            {/* Retake Photo Button */}
+            <StyledButton
+              text="Retake Photo"
+              onClick={() => setImage(null)}
+              styleType="primary"
+              variant="contained"
+              className="mr-2"
+            />
+            {/* Post Story Button */}
+            <StyledButton
+              text="Post Story"
+              onClick={postStory}
+              styleType="secondary"
+              variant="contained"
+              className="ml-2"
+            />
+          </>
+        ) : (
+          /* Take Photo Button */
+          <StyledButton
+            text="Take Photo"
+            onClick={takePhoto}
+            styleType="primary"
+            variant="contained"
+          />
+        )}
+      </div>
     </div>
   );
 };
