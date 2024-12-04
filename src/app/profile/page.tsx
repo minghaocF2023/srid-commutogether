@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from 'next/image'
 import { Avatar, Alert, Box, Typography, ImageList, ImageListItem, Snackbar, SnackbarCloseReason } from "@mui/material";
 import StyledLink from "@/components/StyledLink";
@@ -29,13 +29,16 @@ const Profile = () => {
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
   const [requestSent, setRequestSent] = useState<boolean>(() => {
-    // Check if the request status is saved in localStorage for this user
     const savedRequestStatus = localStorage.getItem(`requestSent_${userId}`);
     return savedRequestStatus ? JSON.parse(savedRequestStatus) : false;
   });
+  const [requestAccepted, setRequestAccepted] = useState<boolean>(() => {
+    const acceptedStatus = localStorage.getItem(`friendRequestAccepted_Samuel`);
+    return acceptedStatus ? JSON.parse(acceptedStatus) : false;
+  });
+  const [requestDeclined, setRequestDeclined] = useState<boolean>(false);
 
   useEffect(() => {
-    // Persist the request status in localStorage when it changes
     localStorage.setItem(`requestSent_${userId}`, JSON.stringify(requestSent));
   }, [requestSent, userId]);
 
@@ -45,6 +48,19 @@ const Profile = () => {
 
   const handleSendRequest = () => {
     setRequestSent(true);
+  };
+
+  const handleAcceptRequest = () => {
+    setRequestAccepted(true);
+    setRequestDeclined(false);
+    localStorage.setItem(`friendRequestAccepted_Samuel`, JSON.stringify(true));
+  };
+
+  const handleDeclineRequest = () => {
+    setRequestDeclined(true);
+    setRequestAccepted(false);
+    localStorage.setItem(`friendRequestAccepted_Samuel`, JSON.stringify(false));
+    localStorage.setItem(`friendRequestDeclined_Samuel`, JSON.stringify(true)); // Add this line
   };
 
   const handleClose = (
@@ -77,18 +93,41 @@ const Profile = () => {
           <Typography variant="subtitle1" className="text-slate-500">
             {userData.email}
           </Typography>
-          {userData.self ?
+          {userData.self ? (
             (edit && <StyledButton
               text="Change Profile"
               onClick={handleUnimplemented}
               styleType='primary'
-            />) :
+            />)
+          ) : userId === 1 && !requestAccepted && !requestDeclined ? (
+            <Box>
+              <StyledButton
+                className="me-2"
+                text="Accept"
+                onClick={handleAcceptRequest}
+                styleType='primary'
+              />
+              <StyledButton
+                className="me-2"
+                text="Decline"
+                onClick={handleDeclineRequest}
+                styleType='secondary'
+              />
+            </Box>
+          ) : userId === 1 && requestAccepted ? (
+            <StyledButton
+              className="me-2"
+              text="Friend"
+              styleType='secondary'
+              disabled
+            />
+          ) : (
             <Box>
               {requestSent ? (
                 <StyledButton
                   className="me-2"
                   text="Requested"
-                  styleType='secondary' // Different color to indicate request has been sent
+                  styleType='secondary'
                 />
               ) : (
                 <StyledButton
@@ -100,7 +139,7 @@ const Profile = () => {
               )}
               <PersonAddAltIcon />
             </Box>
-          }
+          )}
         </div>
       </div>
       <div className="flex flex-col justify-stretch pb-4">
@@ -153,7 +192,6 @@ const Profile = () => {
   );
 };
 
-
 const usersData = [
   {
     name: 'Tommy Chan',
@@ -176,7 +214,7 @@ const usersData = [
     bio: 'Hi I am Sherry I like taking Caltrain!',
     self: false,
   },
-]
+];
 
 const itemData = [
   {
@@ -248,4 +286,5 @@ const itemData = [
     title: 'Bike',
   },
 ];
+
 export default Profile;
