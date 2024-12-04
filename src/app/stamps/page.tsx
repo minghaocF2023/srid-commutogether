@@ -9,24 +9,7 @@ import { Paper } from "@mui/material";
 import StyledLink from "@/components/StyledLink";
 import useLocalStorage from "@/hook/useLocalStorage";
 import { useRouter } from "next/navigation";
-
-type LocationData = {
-  name: string;
-  stampImage: string;
-  image: string;
-  intro: string;
-  collected: boolean;
-};
-
-type SocialData = {
-  name: string;
-  stampImage: string;
-  image: string;
-  description: string;
-  timestamp: string;
-  collected: boolean;
-  count: number;
-};
+import { SocialData, LocationData } from "@/types/stamps";
 
 const data: { [key: string]: LocationData } = {
   mtv: {
@@ -152,21 +135,20 @@ const Stamps = () => {
                 onClick={() => handleView(location)}
                 className={`${
                   stampData[location].collected ? "" : "grayscale"
-                } flex gap-4 items-center relative`}
+                } flex gap-4 items-center relative w-full h-[200px]`}
               >
-                <Image
-                  className="rounded-md "
-                  src={stampData[location].image}
+                <img
+                  className="rounded w-full h-full object-cover"
                   alt=""
-                  width={350}
-                  height={100}
+                  src={stampData[location].image}
                 />
+
                 <Image
                   className="rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
                   src={stampData[location].stampImage}
                   alt=""
-                  width={200}
-                  height={200}
+                  width={150}
+                  height={150}
                 />
               </div>
             </div>
@@ -182,21 +164,20 @@ const Stamps = () => {
                 onClick={() => handleView(location)}
                 className={`${
                   stampData[location].collected ? "" : "grayscale"
-                } flex gap-4 items-center relative`}
+                } flex gap-4 items-center relative w-full h-[200px]`}
               >
-                <Image
-                  className="rounded-md "
-                  src={stampData[location].image}
+                <img
+                  className="rounded w-full h-full object-cover"
                   alt=""
-                  width={350}
-                  height={100}
+                  src={stampData[location].image}
                 />
+
                 <Image
                   className="rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
                   src={stampData[location].stampImage}
                   alt=""
-                  width={200}
-                  height={200}
+                  width={150}
+                  height={150}
                 />
               </div>
             </div>
