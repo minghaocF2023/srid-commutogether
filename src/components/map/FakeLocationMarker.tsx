@@ -14,7 +14,11 @@ const FakeLocationMarker: React.FC<FakeLocationMarkerProps> = ({
 
   // Calculate size based on zoom level
   const markerSize =
-    zoom >= 14 ? 40 : 20 + Math.pow((zoom - 8) / (14 - 8), 2) * (40 - 20);
+    zoom < 8
+      ? 20
+      : zoom >= 14
+      ? 40
+      : 20 + Math.pow((zoom - 8) / (14 - 8), 2) * (40 - 20);
 
   return (
     <Marker
