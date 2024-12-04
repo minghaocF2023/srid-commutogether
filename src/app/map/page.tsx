@@ -4,9 +4,17 @@ import Map, { MapRef, Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import photoData from "@/data/photos.json";
 import { setupMap } from "@/utils/mapSetup";
+import StyledButton from "@/components/StyledButton";
+import { useRouter } from "next/navigation";
 
 const MapPage = () => {
   const mapRef = useRef<MapRef | null>(null);
+  const [viewport, setViewport] = useState({
+    latitude: 37.39,
+    longitude: -122.07,
+    zoom: 12, // Initial zoom level
+  });
+  const router = useRouter();
 
   const onMapLoad = useCallback(() => {
     if (!mapRef.current) return;
@@ -14,76 +22,80 @@ const MapPage = () => {
     setupMap(map);
   }, []);
 
+  const onMove = useCallback(
+    (evt: { viewState: { latitude: any; longitude: any; zoom: any } }) => {
+      setViewport({
+        latitude: evt.viewState.latitude,
+        longitude: evt.viewState.longitude,
+        zoom: evt.viewState.zoom,
+      });
+    },
+    []
+  );
+
+  const handleAddStory = () => {
+    console.log("Add story clicked");
+    router.push("/story");
+  };
+
+  const MIN_ZOOM_FOR_MARKERS = 8; // Markers hidden below this zoom level
+
   return (
-    <div>
+    <div className="relative w-screen h-screen">
       <Map
         ref={mapRef}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
-        initialViewState={{
-          longitude: -122.07,
-          latitude: 37.39,
-          zoom: 12,
-        }}
+        initialViewState={viewport}
+        onMove={onMove}
         minZoom={0}
         maxZoom={18}
         style={{ width: "100vw", height: "100vh" }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         onLoad={onMapLoad}
       >
-        {photoData.albums.map((album: any) => (
-          <Marker
-            key={album.name}
-            longitude={album.photos[0].longitude}
-            latitude={album.photos[0].latitude}
-            anchor="center"
-          >
-            <div style={{ position: "relative", textAlign: "center" }}>
-              {/* Marker Image */}
-              <img
-                src={album.photos[0].photoUrl}
-                alt={album.name}
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "50%",
-                  border: "3px solid #ff0000",
-                  cursor: "pointer",
-                  objectFit: "cover",
-                  boxShadow: "0 0 5px rgba(0,0,0,0.5)",
-                }}
-              />
-              {/* Name on Hover */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "-30px", // Position below the marker
-                  left: "50%",
-                  transform: "translateX(-50%)", // Center text
-                  background: "rgba(0, 0, 0, 0.8)",
-                  color: "#fff",
-                  padding: "4px 8px",
-                  borderRadius: "4px",
-                  fontSize: "12px",
-                  whiteSpace: "nowrap",
-                  opacity: 0, // Initially hidden
-                  transition: "opacity 0.3s", // Smooth hover effect
-                }}
-                className="album-name"
+        {viewport.zoom >= MIN_ZOOM_FOR_MARKERS &&
+          photoData.albums.map((album: any) => {
+            const markerSize =
+              viewport.zoom >= 12
+                ? 100 // Cap size at 100px for zoom level >= 12
+                : 30 + Math.pow((viewport.zoom - 8) / (12 - 8), 2) * (100 - 30); // Exponential scaling
+
+            return (
+              <Marker
+                key={album.name}
+                longitude={album.photos[0].longitude}
+                latitude={album.photos[0].latitude}
+                anchor="center"
               >
-                {album.name}
-              </div>
-            </div>
-          </Marker>
-        ))}
+                <div className="relative text-center">
+                  {/* Marker Image */}
+                  <img
+                    src={album.photos[0].photoUrl}
+                    alt={album.name}
+                    className="rounded-full border-4 border-red-500 shadow-md cursor-pointer transition-all"
+                    style={{
+                      width: `${markerSize}px`,
+                      height: `${markerSize}px`,
+                    }}
+                  />
+                  {/* Name on Hover */}
+                  <div className="absolute bottom-[-30px] left-1/2 transform -translate-x-1/2 bg-black bg-opacity-80 text-white px-2 py-1 rounded-md text-xs whitespace-nowrap opacity-0 transition-opacity hover:opacity-100">
+                    {album.name}
+                  </div>
+                </div>
+              </Marker>
+            );
+          })}
       </Map>
-      <style jsx>{`
-        .album-name:hover {
-          opacity: 1 !important;
-        }
-        div img:hover + .album-name {
-          opacity: 1 !important;
-        }
-      `}</style>
+      {/* Add Story Button */}
+      <div className="absolute bottom-[100px] left-1/2 transform -translate-x-1/2 z-[1000] shadow-lg rounded-lg">
+        <StyledButton
+          text="Add Story"
+          onClick={handleAddStory}
+          styleType="primary"
+          className="add-story-button"
+        />
+      </div>
     </div>
   );
 };
