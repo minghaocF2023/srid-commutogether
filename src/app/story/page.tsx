@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Camera, CameraType } from "react-camera-pro";
 import StyledButton from "@/components/StyledButton";
-
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 const StoryPage = () => {
+  const searchParams = useSearchParams();
+  let locationId = searchParams.get("id");
+  const router = useRouter();
   const camera = useRef<CameraType>(null);
   const [image, setImage] = useState<string | null>(null);
 
@@ -15,6 +19,12 @@ const StoryPage = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (searchParams.has("id")) {
+  //     locationId = searchParams.get("id") as string;
+  //   }
+  // }, [searchParams]);
+
   // Placeholder function for posting the story
   const postStory = () => {
     if (!image) {
@@ -23,9 +33,12 @@ const StoryPage = () => {
     // Retrieve existing stories from localStorage
     const existingStories = localStorage.getItem("userStories");
     let storiesArray = existingStories ? JSON.parse(existingStories) : [];
-
+    const imageObj = {
+      image,
+      locationId,
+    };
     // Add the new image
-    storiesArray.push(image);
+    storiesArray.push(imageObj);
 
     // Save back to localStorage
     localStorage.setItem("userStories", JSON.stringify(storiesArray));
@@ -33,13 +46,17 @@ const StoryPage = () => {
     // Reset the image after posting
     setImage(null);
 
-    console.log("Story posted!");
+    router.push("/stories?id=" + locationId);
   };
 
   return (
     <div className="w-full h-screen relative">
       {image ? (
-        <img src={image} alt="Captured" className="w-full h-full object-cover" />
+        <img
+          src={image}
+          alt="Captured"
+          className="w-full h-full object-cover"
+        />
       ) : (
         <Camera
           ref={camera}

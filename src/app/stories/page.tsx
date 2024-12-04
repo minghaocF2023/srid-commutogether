@@ -1,27 +1,33 @@
 "use client";
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import albums from '../../data/photos.json';
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import albums from "../../data/photos.json";
 import Link from "next/link";
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import { Button, Box, Typography, ImageList, ImageListItem } from '@mui/material';
-import { notFound, useRouter, useSearchParams } from 'next/navigation';
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import {
+  Button,
+  Box,
+  Typography,
+  ImageList,
+  ImageListItem,
+} from "@mui/material";
+import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from 'swiper/modules';
-import React, { useState, useEffect } from 'react';
+import { Navigation, Pagination } from "swiper/modules";
+import React, { useState, useEffect } from "react";
 
 const Home = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const albumId: string | null = searchParams.get('id');
+  const albumId: string | null = searchParams.get("id");
   const [photosData, setPhotosData] = useState([]);
 
   useEffect(() => {
     let initialPhotos = [];
-    for (const album of albums['albums']) {
-      if (album['albumId'] === albumId) {
-        initialPhotos = album['photos'];
+    for (const album of albums["albums"]) {
+      if (album["albumId"] === albumId) {
+        initialPhotos = album["photos"];
         break;
       }
     }
@@ -31,16 +37,23 @@ const Home = () => {
     }
 
     // Retrieve user stories from localStorage
-    const existingStories = localStorage.getItem('userStories');
-    const storiesArray = existingStories ? JSON.parse(existingStories) : [];
+    const existingStories = localStorage.getItem("userStories");
+    let storiesArray = existingStories ? JSON.parse(existingStories) : [];
 
+    // filter user stories by albumId
+    storiesArray = storiesArray.filter(
+      (story: { locationId: string; image: string }) =>
+        story.locationId === albumId
+    );
     // Map user stories to the same format as initialPhotos
-    const userPhotos = storiesArray.map((image: string, index: number) => ({
-      photoId: `user-${index}`,
-      photoUrl: image,
-      location: 'User Upload',
-      isUserUpload: true,
-    }));
+    const userPhotos = storiesArray.map(
+      (image: { locationId: string; image: string }, index: number) => ({
+        photoId: `user-${index}`,
+        photoUrl: image.image,
+        location: "User Upload",
+        isUserUpload: true,
+      })
+    );
 
     // Combine userPhotos with initialPhotos
     setPhotosData([...userPhotos, ...initialPhotos]);
@@ -54,8 +67,12 @@ const Home = () => {
         </Button>
       </Box>
       <Box className="flex justify-between">
-        <Typography variant="h4">Mountain View</Typography>
-        <Link href="/story">
+        <Typography variant="h4">
+          {albumId === "f9fdba86-d68a-4730-9172-24eef2bf6051"
+            ? "Mountain View"
+            : "Sunnyvale"}
+        </Typography>
+        <Link href={`/story?id=${albumId}`}>
           <ControlPointIcon fontSize="large" />
         </Link>
       </Box>
@@ -78,7 +95,12 @@ const Home = () => {
                 (item) =>
                   item.isUserUpload && (
                     <SwiperSlide key={item.photoId}>
-                      <img src={item.photoUrl} alt={item.location} loading="lazy" />
+                      <img
+                        src={item.photoUrl}
+                        alt={item.location}
+                        className="w-full h-full object-cover rounded-lg"
+                        loading="lazy"
+                      />
                     </SwiperSlide>
                   )
               )}
