@@ -133,6 +133,7 @@ const Profile = () => {
               )
             ) : userId === 1 && !requestAccepted && !requestDeclined ? (
               <Box>
+                <div className="text-red-500">Sent you a friend request!</div>
                 <StyledButton
                   className="me-2"
                   text="Accept"
