@@ -146,7 +146,7 @@ const Profile = () => {
         <StyledLink
           text='Back'
           styleType='secondary'
-          href={'/social'}
+          href={'/'}
         />
       }
     </div>
