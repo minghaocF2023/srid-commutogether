@@ -18,6 +18,15 @@ type LocationData = {
   collected: boolean;
 };
 
+type SocialData = {
+  name: string;
+  stampImage: string;
+  image: string;
+  description: string;
+  timestamp: string;
+  collected: boolean;
+};
+
 const data: { [key: string]: LocationData } = {
   mtv: {
     name: "Mountain View",
@@ -40,6 +49,25 @@ const data: { [key: string]: LocationData } = {
     image: "/stamps/sv.jpg",
     intro:
       "Sunnyvale is a city located in Santa Clara County, California, in Silicon Valley.",
+    collected: false,
+  },
+};
+
+const socialStampData: { [key: string]: SocialData } = {
+  bf: {
+    name: "Bump with Friends",
+    stampImage: "/stamps/bump.png",
+    image: "/stamps/friends.png",
+    description: "You bumped with friends!",
+    timestamp: "2024-10-10",
+    collected: false,
+  },
+  bd: {
+    name: "Birthday",
+    stampImage: "/stamps/bump.png",
+    image: "/stamps/friends.png",
+    description: "Happy Birthday!",
+    timestamp: "2024-11-10",
     collected: false,
   },
 };
@@ -77,6 +105,7 @@ function a11yProps(index: number) {
 const Stamps = () => {
   const [value, setValue] = useState(0);
   const [stampData] = useLocalStorage("stampData", data);
+  const [socialData] = useLocalStorage("socialStampData", socialStampData);
   const router = useRouter();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -140,29 +169,64 @@ const Stamps = () => {
             </div>
           </Paper>
         ))}
+        <div className="h-[100px]"></div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        {Object.keys(stampData).map((location) => (
+          <Paper className="mb-3" key={location}>
+            <div className="flex justify-between items-center">
+              <div
+                onClick={() => handleView(location)}
+                className={`${
+                  stampData[location].collected ? "" : "grayscale"
+                } flex gap-4 items-center relative`}
+              >
+                <Image
+                  className="rounded-md "
+                  src={stampData[location].image}
+                  alt=""
+                  width={350}
+                  height={100}
+                />
+                <Image
+                  className="rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+                  src={stampData[location].stampImage}
+                  alt=""
+                  width={200}
+                  height={200}
+                />
+              </div>
+            </div>
+          </Paper>
+        ))}
+        <div className="h-[100px]"></div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        {Object.keys(socialData).map((key) => (
+          <Paper className="mb-3" key={key}>
+            <div className="flex justify-between items-center">
+              <div
+                onClick={() => handleView(key)}
+                className={`${
+                  socialData[key].collected ? "" : "grayscale"
+                } flex gap-4 justify-center items-center relative p-4`}
+              >
+                <Image
+                  className="rounded-md "
+                  src={socialData[key].stampImage}
+                  alt=""
+                  width={100}
+                  height={100}
+                />
+                <div className="flex flex-col">
+                  <div className="text-2xl bold">{socialData[key].name}</div>
+                </div>
+              </div>
+            </div>
+          </Paper>
+        ))}
       </CustomTabPanel>
     </div>
-  );
-};
-
-const Stamp = () => {
-  return (
-    <Paper className=" mb-3">
-      <Image
-        className="rounded-md"
-        src="/stamps/lib.jpeg"
-        alt=""
-        width={500}
-        height={100}
-      />
-      <div className="flex justify-between items-center"></div>
-    </Paper>
   );
 };
 

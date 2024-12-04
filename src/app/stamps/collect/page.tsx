@@ -55,7 +55,6 @@ const Collect = () => {
   }, [searchParams]);
 
   const handleCollect = () => {
-    console.log("Collected!");
     setStampData((prevData) => {
       const updatedData = { ...prevData };
       updatedData[location!].collected = true;
