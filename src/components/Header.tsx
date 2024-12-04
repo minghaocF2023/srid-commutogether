@@ -19,7 +19,6 @@ const StyledFab = styled(Fab)({
   left: 0,
   right: 0,
   margin: "0 auto",
-  padding: "0.5rem",
 });
 
 const Header = () => {
@@ -56,7 +55,11 @@ const Header = () => {
           <StyledFab className="p-2" color="primary" aria-label="add">
             <Link href="/bump">
               <div className="flex flex-col items-center justify-center p-2">
-                <ThumbsUpDownIcon className="text-white" />
+                <img
+                  src="/bump.png"
+                  alt="bump"
+                  className="!w-10 !max-w-none h-10"
+                />
               </div>
             </Link>
           </StyledFab>
