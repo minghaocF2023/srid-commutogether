@@ -1,0 +1,32 @@
+[
+  {
+    "photoUrl": "/photos/photo1.JPG",
+    "latitude": 37.392966666666666,
+    "longitude": -122.07684444444445,
+    "location": "682 Villa Street, Mountain View, California 94041, United States"
+  },
+  {
+    "photoUrl": "/photos/photo5.JPG",
+    "latitude": 37.39357777777778,
+    "longitude": -122.08003888888888,
+    "location": "Wild Cherry Lane, Mountain View, California 94041, United States"
+  },
+  {
+    "photoUrl": "/photos/photo2.JPG",
+    "latitude": 37.39264722222222,
+    "longitude": -122.07605,
+    "location": "515 Villa Street, Mountain View, California 94041, United States"
+  },
+  {
+    "photoUrl": "/photos/photo3.JPG",
+    "latitude": 37.37677222222222,
+    "longitude": -122.064225,
+    "location": "790 East El Camino Real, Mountain View, California 94040, United States"
+  },
+  {
+    "photoUrl": "/photos/photo4.JPG",
+    "latitude": 37.414325,
+    "longitude": -122.07710277777777,
+    "location": "Computer History Museum, 1401 N Shoreline Blvd, Mountain View, California 94043, United States"
+  }
+]
