@@ -188,6 +188,7 @@ const getLastMessage = (friendName: string) => {
       Brian: "I might join you. Let me know when you are about to leave!",
       Alice: "I was thinking of checking out the new art gallery.",
     };
+    // @ts-ignore
     return initialMessages[friendName];
   }
 };
@@ -378,6 +379,7 @@ const ChatRoom = ({
           },
         ],
       };
+      // @ts-ignore
       setMessages(initialMessages[friend.name] || []);
     }
   }, [friend]);

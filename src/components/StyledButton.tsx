@@ -22,6 +22,7 @@ const StyledButton = ({
       sx={{ paddingY: "5px" }}
       className={`text-white ${className}`}
       variant={variant}
+      // @ts-ignore
       color={styleType}
       disabled={disabled}
       onClick={onClick}

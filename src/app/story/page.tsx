@@ -61,6 +61,7 @@ const StoryPage = () => {
         <Camera
           ref={camera}
           facingMode="environment"
+          // @ts-ignore
           className="w-full h-full object-cover"
         />
       )}

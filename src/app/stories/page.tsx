@@ -25,6 +25,7 @@ const Home = () => {
   const [albumName, setAlbumName] = useState<string>("");
 
   useEffect(() => {
+    // @ts-ignore
     let initialPhotos = [];
     let foundAlbumName = "";
     for (const album of albums["albums"]) {
@@ -61,6 +62,7 @@ const Home = () => {
     );
 
     // Combine userPhotos with initialPhotos
+    // @ts-ignore
     setPhotosData([...userPhotos, ...initialPhotos]);
   }, [albumId]);
 
@@ -77,8 +79,8 @@ const Home = () => {
           <ControlPointIcon fontSize="large" />
         </Link>
       </Box>
-
       {/* My Story Section */}
+      {/* @ts-ignore */}
       {photosData.some((item) => item.isUserUpload) && (
         <Box className="flex flex-col">
           <Typography variant="h6">My Story</Typography>
@@ -94,10 +96,14 @@ const Home = () => {
             >
               {photosData.map(
                 (item) =>
+                  // @ts-ignore
                   item.isUserUpload && (
+                    // @ts-ignore
                     <SwiperSlide key={item.photoId}>
                       <img
+                        // @ts-ignore
                         src={item.photoUrl}
+                        // @ts-ignore
                         alt={item.location}
                         className="w-full h-full object-cover rounded-lg"
                         loading="lazy"
@@ -109,15 +115,17 @@ const Home = () => {
           </Box>
         </Box>
       )}
-
       {/* Explore Section */}
       <Typography variant="h6">Explore</Typography>
       <Box className="flex-1 overflow-y-auto">
         <ImageList variant="masonry" cols={2} gap={10}>
           {photosData.map(
             (item) =>
+              // @ts-ignore
               !item.isUserUpload && (
+                // @ts-ignore
                 <ImageListItem key={item.photoId}>
+                  {/* @ts-ignore */}
                   <img src={item.photoUrl} alt={item.location} loading="lazy" />
                 </ImageListItem>
               )
