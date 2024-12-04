@@ -3,6 +3,8 @@ import json
 from PIL import Image, ExifTags
 import requests
 from dotenv import load_dotenv
+from sklearn.cluster import DBSCAN
+import numpy as np
 
 # Load environment variables from .env.local
 load_dotenv(dotenv_path=".env.local")
@@ -63,6 +65,17 @@ def reverse_geocode(lat, lon):
         print(f"Error during reverse geocoding: {e}")
         return "Unknown location"
 
+# Function to cluster photos by location
+def cluster_photos(photo_metadata):
+    coords = np.array([(photo["latitude"], photo["longitude"]) for photo in photo_metadata])
+    clustering = DBSCAN(eps=0.01, min_samples=1).fit(coords)
+    clusters = {}
+    for idx, label in enumerate(clustering.labels_):
+        if label not in clusters:
+            clusters[label] = []
+        clusters[label].append(photo_metadata[idx])
+    return clusters
+
 # Main function to process all photos
 def process_photos():
     photo_metadata = []
@@ -80,17 +93,30 @@ def process_photos():
         exif_data = extract_exif(photo_path)
         if exif_data:
             location = reverse_geocode(exif_data["latitude"], exif_data["longitude"])
+            is_user_upload = "my" in file_name.lower()  # For demo purposes, assume photos with "my" in the filename are user uploads
             photo_metadata.append({
                 "photoUrl": f"/photos/{file_name}",
                 "latitude": exif_data["latitude"],
                 "longitude": exif_data["longitude"],
                 "location": location,
+                "isUserUpload": is_user_upload
             })
         else:
             print(f"No GPS data found for {file_name}")
 
+    clusters = cluster_photos(photo_metadata)
+    albums = []
+    for label, photos in clusters.items():
+        album_name = reverse_geocode(photos[0]["latitude"], photos[0]["longitude"])
+        contains_user_uploads = any(photo["isUserUpload"] for photo in photos)
+        albums.append({
+            "name": album_name,
+            "photos": photos,
+            "containsUserUploads": contains_user_uploads
+        })
+
     with open(OUTPUT_FILE, "w") as json_file:
-        json.dump(photo_metadata, json_file, indent=2)
+        json.dump({"albums": albums}, json_file, indent=2)
         print(f"Metadata saved to {OUTPUT_FILE}")
 
 # Run the script
