@@ -23,10 +23,9 @@ const memoryImages = [
 const Home = () => {
   const router = useRouter();
   const subscriptions = useSubscriptionStore((state: { subscriptions: Subscription[] }) => state.subscriptions);
-  const [aspectRatio, setAspectRatio] = useState<number>(2); // default 2:1 ratio
+  const [aspectRatio, setAspectRatio] = useState<number>(2);
   const [showPreferences, setShowPreferences] = useState(false);
 
-  // Calculate the width of the container
   useEffect(() => {
     const updateAspectRatio = () => {
       const width = window.innerWidth - 32;
