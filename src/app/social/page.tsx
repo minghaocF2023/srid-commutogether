@@ -261,7 +261,6 @@ export default function ChatPage() {
       ) : (
         <>
           <header className="flex justify-between items-center p-4 bg-white border-b">
-            <button className="text-sm absolute left-4">&lt; Back</button>
             <h2 className="text-lg font-bold mx-auto">Friend</h2>
           </header>
 
