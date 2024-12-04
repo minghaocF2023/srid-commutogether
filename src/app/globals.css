@@ -7,7 +7,6 @@
   --foreground: #171717;
 }
 
-
 body {
   color: var(--foreground);
   background: var(--background);
@@ -42,4 +41,24 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+@keyframes markerHighlight {
+  0%,
+  100% {
+    transform: scale(1.3);
+    @apply border-red-400;
+  }
+  25%,
+  75% {
+    @apply border-purple-500;
+  }
+  50% {
+    transform: scale(1.5);
+    @apply border-red-500;
+  }
+}
+
+.highlighted-marker {
+  animation: markerHighlight 3s ease-in-out infinite;
 }
