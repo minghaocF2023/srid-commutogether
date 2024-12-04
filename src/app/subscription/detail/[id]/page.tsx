@@ -107,10 +107,10 @@ const SubscriptionDetailPage = ({ params }: PageProps) => {
 
       {/* Status Messages */}
       <div className="space-y-2 mb-6">
-        <div className="bg-red-500 text-white p-3 rounded-lg text-center">
+        <div className="bg-green-500 text-white p-3 rounded-lg text-center">
           Your train will arrive in 20 mins
         </div>
-        <div className="bg-red-500 text-white p-3 rounded-lg text-center">
+        <div className="bg-orange-500 text-white p-3 rounded-lg text-center">
           You should leave in 5 mins!
         </div>
       </div>
