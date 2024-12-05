@@ -30,6 +30,8 @@ const MapPage = () => {
     if (!mapRef.current) return;
     const map = mapRef.current.getMap();
 
+    console.log("Fetching actual location...");
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -76,6 +78,11 @@ const MapPage = () => {
     const map = mapRef.current.getMap();
     setupMap(map);
 
+    // If no fake location is stored, fetch and set the user's actual location
+    if (!fakeLocation) {
+      fetchAndSetLocation();
+    }
+
     // If a fake location is already stored, fly to it
     if (fakeLocation) {
       setViewport({
@@ -113,7 +120,24 @@ const MapPage = () => {
     if (closestAlbumId) {
       router.push(`/story?id=${closestAlbumId}`);
     } else {
-      router.push("/story");
+      // find the closest album again
+      let closestId = null;
+      let minDistance = Infinity;
+      photoData.albums.forEach((album) => {
+        const distance = calculateDistance(
+          viewport.latitude,
+          viewport.longitude,
+          album.photos[0].latitude,
+          album.photos[0].longitude
+        );
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestId = album.albumId;
+        }
+      });
+
+      router.push(`/story?id=${closestId}`);
     }
   };
 

@@ -70,7 +70,11 @@ const Home = () => {
     <Suspense>
       <Box className="flex flex-col w-full h-screen p-4 pb-16">
         <Box>
-          <Button onClick={() => router.back()} variant="text" color="inherit">
+          <Button
+            onClick={() => router.push("/map")}
+            variant="text"
+            color="inherit"
+          >
             Back To Map
           </Button>
         </Box>
