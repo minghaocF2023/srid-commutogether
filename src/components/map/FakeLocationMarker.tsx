@@ -11,6 +11,7 @@ const FakeLocationMarker: React.FC<FakeLocationMarkerProps> = ({
   zoom,
 }) => {
   if (!fakeLocation) return null;
+  console.log("FakeLocationMarker", fakeLocation, zoom);
 
   // Calculate size based on zoom level
   const markerSize =

@@ -297,10 +297,10 @@ const MapPage = () => {
       <div className="absolute bottom-[100px] left-[20px] z-[1000]">
         <button
           onClick={fetchAndSetLocation}
-          className="flex flex-col items-center justify-center w-[70px] h-[70px] bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
+          className="flex flex-col items-center justify-center w-[70px] h-[70px] bg-background text-white rounded-lg shadow-md hover:bg-gray-300 transition"
         >
-          <MapPin size={24} className="text-white mb-1" />
-          <span className="text-xs font-medium">Actual</span>
+          <MapPin size={26} className="text-primary mb-1" />
+          <span className="text-md text-primary font-bold">Actual</span>
         </button>
       </div>
 
@@ -308,9 +308,9 @@ const MapPage = () => {
       <div className="absolute bottom-[100px] right-[20px] z-[1000]">
         <button
           onClick={moveToStoredLocation}
-          className="flex items-center justify-center w-[70px] h-[70px] bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
+          className="flex items-center justify-center w-[70px] h-[70px] bg-background text-white rounded-lg shadow-md hover:bg-slate-400 transition"
         >
-          <LocateFixed size={32} className="text-white" />
+          <LocateFixed size={32} className="text-blue-500" />
         </button>
       </div>
 
@@ -327,29 +327,29 @@ const MapPage = () => {
       )}
 
       {/* Fake Location Buttons */}
-      <div className="absolute top-[10px] left-1/2 transform -translate-x-1/2 z-[1000] space-x-2 flex">
+      <div className="absolute bottom-[180px] left-[20px] z-[1000]">
         {!isFakingLocation ? (
           <button
             onClick={handleStartFakingLocation}
-            className="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition"
+            className="flex items-center justify-center w-[70px] h-[70px] bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 transition"
           >
             Set Location
           </button>
         ) : (
-          <>
+          <div className="flex flex-col justify-between w-[70px] h-[70px] bg-gray-600 text-white rounded-lg shadow-md">
             <button
               onClick={handleCancelFakingLocation}
-              className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition"
+              className="flex-1 w-full bg-gray-500 rounded-t-lg hover:bg-gray-600 transition"
             >
               Cancel
             </button>
             <button
               onClick={handleDoneFakingLocation}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition"
+              className="flex-1 w-full bg-green-500 rounded-b-lg hover:bg-green-600 transition"
             >
               Done
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
