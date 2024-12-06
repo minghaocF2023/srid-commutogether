@@ -79,6 +79,9 @@ const SchedulePage = ({ params }: PageProps) => {
     router.push('/');
   };
 
+  // Filter routes to only show unsubscribed ones
+  const availableRoutes = routes.filter(route => !hasSubscription(route.id));
+
   return (
     <div className="min-h-screen bg-white p-4 pb-20">
       <div className="flex items-center mb-6">
@@ -93,40 +96,37 @@ const SchedulePage = ({ params }: PageProps) => {
       <h1 className="text-2xl font-semibold mb-6">New Subscription</h1>
 
       <div className="space-y-2">
-        {routes.map((route) => {
-          const isSubscribed = hasSubscription(route.id);
-          
-          return (
-            <div
-              key={route.id}
-              className={`flex items-center justify-between p-3 rounded-lg bg-gray-50
-                ${hoveredRouteId === route.id ? "border-2 border-black" : ""}`}
-              onMouseEnter={() => setHoveredRouteId(route.id)} 
-              onMouseLeave={() => setHoveredRouteId(null)}
-            >
-              <div className="flex items-center flex-1">
-                <DirectionsTransitIcon className="text-black mr-3" />
-                <div>
-                  <div className="text-sm">
-                    {route.from} to {route.to}
-                  </div>
-                  <div className="text-xs text-gray-500">{route.time}</div>
+        {availableRoutes.map((route) => (
+          <div
+            key={route.id}
+            className={`flex items-center justify-between p-3 rounded-lg bg-gray-50
+              ${hoveredRouteId === route.id ? "border-2 border-black" : ""}`}
+            onMouseEnter={() => setHoveredRouteId(route.id)} 
+            onMouseLeave={() => setHoveredRouteId(null)}
+          >
+            <div className="flex items-center flex-1">
+              <DirectionsTransitIcon className="text-black mr-3" />
+              <div>
+                <div className="text-sm">
+                  {route.from} to {route.to}
                 </div>
+                <div className="text-xs text-gray-500">{route.time}</div>
               </div>
-              <button
-                onClick={() => handleSubscribe(route)}
-                disabled={isSubscribed}
-                className={`px-4 py-1.5 rounded-full text-sm
-                  ${isSubscribed 
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                    : 'bg-[#FFB800] text-white hover:bg-[#E5A700]'
-                  }`}
-              >
-                {isSubscribed ? 'Subscribed' : 'Subscribe'}
-              </button>
             </div>
-          );
-        })}
+            <button
+              onClick={() => handleSubscribe(route)}
+              className="px-4 py-1.5 rounded-full text-sm bg-[#FFB800] text-white hover:bg-[#E5A700]"
+            >
+              Subscribe
+            </button>
+          </div>
+        ))}
+        
+        {availableRoutes.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            No available routes to subscribe
+          </div>
+        )}
       </div>
 
       <Header />

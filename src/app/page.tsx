@@ -40,7 +40,7 @@ const Home = () => {
   useEffect(() => {
     const updateAspectRatio = () => {
       const width = window.innerWidth - 32;
-      setAspectRatio(width / (width * 0.4)); // Reduced height ratio to 0.4
+      setAspectRatio(width / (width * 0.4));
     };
 
     updateAspectRatio();
