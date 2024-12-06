@@ -208,7 +208,7 @@ const Home = () => {
           <h2 className="text-lg mb-3">Subscribed Transit Schedule</h2>
           <Link href="/subscription">
             <button className="w-full bg-[#F5A524] text-white py-3 rounded text-center">
-              New Subscription
+              Subscribe a New Train
             </button>
           </Link>
 

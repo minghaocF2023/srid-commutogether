@@ -25,7 +25,7 @@ const NewSubscriptionPage = () => {
         </span>
       </div>
 
-      <h1 className="text-2xl font-semibold mb-6">New Subscription</h1>
+      <h1 className="text-2xl font-semibold mb-6">Subscribe a New Train</h1>
 
       <h2 className="text-lg mb-4">Choose a stop</h2>
 

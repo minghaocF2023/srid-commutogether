@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import { useSubscriptionStore } from "@/lib/stores/subscriptionStore";
@@ -17,6 +17,7 @@ const SubscriptionDetailPage = ({ params }: PageProps) => {
     state.subscriptions.find(sub => sub.id === id)
   );
   const removeSubscription = useSubscriptionStore((state) => state.removeSubscription);
+  const [showNotification, setShowNotification] = useState(true);
 
   useEffect(() => {
     if (!subscription) {
@@ -53,6 +54,28 @@ const SubscriptionDetailPage = ({ params }: PageProps) => {
 
   return (
     <div className="min-h-screen bg-white p-4 pb-20">
+      {/* Notification Popup */}
+      {showNotification && (
+        <div className="fixed inset-x-0 top-0 z-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg mx-auto max-w-md p-4">
+            <div className="space-y-3">
+              <div className="bg-green-50 border-l-4 border-green-500 p-3">
+                <p className="text-green-700">Your train will arrive in 20 minutes</p>
+              </div>
+              <div className="bg-orange-50 border-l-4 border-orange-500 p-3">
+                <p className="text-orange-700">You should leave in 5 minutes!</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowNotification(false)}
+              className="w-full mt-4 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Top Navigation */}
       <div className="flex items-center mb-6">
         <span 
@@ -63,7 +86,19 @@ const SubscriptionDetailPage = ({ params }: PageProps) => {
         </span>
       </div>
 
-      <h1 className="text-2xl font-semibold mb-6">Subscription</h1>
+      <h1 className="text-2xl font-semibold mb-6">Train Schedule</h1>
+
+      {/* Status Information */}
+      <div className="mb-6 space-y-2">
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+          <p className="text-sm">Train arrives in 20 minutes</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+          <p className="text-sm">Recommended departure in 5 minutes</p>
+        </div>
+      </div>
 
       {/* Route Card */}
       <div className="bg-gray-800 text-white p-4 rounded-lg mb-6">
@@ -102,16 +137,6 @@ const SubscriptionDetailPage = ({ params }: PageProps) => {
               <span className="text-xs">{stop}</span>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Status Messages */}
-      <div className="space-y-2 mb-6">
-        <div className="bg-green-500 text-white p-3 rounded-lg text-center">
-          Your train will arrive in 20 mins
-        </div>
-        <div className="bg-orange-500 text-white p-3 rounded-lg text-center">
-          You should leave in 5 mins!
         </div>
       </div>
 

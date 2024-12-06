@@ -93,7 +93,7 @@ const SchedulePage = ({ params }: PageProps) => {
         </span>
       </div>
 
-      <h1 className="text-2xl font-semibold mb-6">New Subscription</h1>
+      <h1 className="text-2xl font-semibold mb-6">Subscribe a New Train</h1>
 
       <div className="space-y-2">
         {availableRoutes.map((route) => (
