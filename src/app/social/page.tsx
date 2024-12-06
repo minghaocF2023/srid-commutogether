@@ -17,10 +17,20 @@ const Social = ({ onSelectFriend }: SocialProps) => {
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [savedStatus, setSavedStatus] = useState<string | null>(null);
   const [friendStatuses, setFriendStatuses] = useState<
-    { id: number, name: string; status: string; image: string }[]
+    { name: string; status: string; image: string; sameSchedule: boolean }[]
   >([
-    { id: 3, name: "Brian", status: "I love Caltrain", image: "/Brian.webp" },
-    { id: 4, name: "Alice", status: "Boring", image: "/Alice.webp" },
+    {
+      name: "Brian",
+      status: "I love Caltrain",
+      image: "/Brian.webp",
+      sameSchedule: true,
+    },
+    {
+      name: "Alice",
+      status: "Boring",
+      image: "/Alice.webp",
+      sameSchedule: false,
+    },
   ]);
   const router = useRouter(); // Initialize the router
 
@@ -46,6 +56,7 @@ const Social = ({ onSelectFriend }: SocialProps) => {
                 name: "Samuel",
                 status: "Hi I am Samuel!",
                 image: "/Samuel.jpeg",
+                sameSchedule: false,
               },
             ];
           }
@@ -94,7 +105,8 @@ const Social = ({ onSelectFriend }: SocialProps) => {
         />
         <button
           onClick={saveStatus}
-          className="p-2 bg-blue-500 text-white rounded-lg"
+          className="p-2  text-white rounded-lg"
+          style={{ backgroundColor: "#F5A524" }}
         >
           Save
         </button>
@@ -155,7 +167,15 @@ const Social = ({ onSelectFriend }: SocialProps) => {
               alt={friend.name}
             />
             <div>
-              <strong className="block">{friend.name}</strong>
+              <div className="flex gap-2 items-center">
+                <strong className="block">{friend.name}</strong>
+                {friend.sameSchedule && (
+                  <span className="text-xs text-sky-700 bg-sky-200 px-2 py-1 rounded-xl">
+                    Same Schedule
+                  </span>
+                )}
+              </div>
+
               <p className="text-sm text-gray-600">
                 {getLastMessage(friend.name)}
               </p>
@@ -214,7 +234,13 @@ const FriendRequestList = ({ onBack }: { onBack: () => void }) => {
   const router = useRouter(); // Initialize the router
 
   const [friendRequests, setFriendRequests] = useState<
-    { id: number, name: string; image: string; accepted: boolean; link: string }[]
+    {
+      id: number;
+      name: string;
+      image: string;
+      accepted: boolean;
+      link: string;
+    }[]
   >([
     {
       id: 1,
@@ -538,8 +564,8 @@ export default function ChatPage() {
         <FriendRequestList onBack={handleFriendRequestsBack} />
       ) : (
         <>
-          <header className="flex justify-between items-center p-4 bg-white border-b">
-            <h2 className="text-lg font-bold mx-auto">Friend</h2>
+          <header className="flex justify-between items-center p-4 bg-white ">
+            <h2 className="text-3xl">Social</h2>
             <button
               className="absolute right-4 p-2"
               onClick={handleFriendRequestsClick}
