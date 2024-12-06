@@ -17,15 +17,17 @@ const Social = ({ onSelectFriend }: SocialProps) => {
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [savedStatus, setSavedStatus] = useState<string | null>(null);
   const [friendStatuses, setFriendStatuses] = useState<
-    { name: string; status: string; image: string; sameSchedule: boolean }[]
+    { id: number, name: string; status: string; image: string; sameSchedule: boolean }[]
   >([
     {
+      id: 3,
       name: "Brian",
       status: "I love Caltrain",
       image: "/Brian.webp",
       sameSchedule: true,
     },
     {
+      id: 4,
       name: "Alice",
       status: "Boring",
       image: "/Alice.webp",
