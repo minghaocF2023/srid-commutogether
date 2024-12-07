@@ -1,7 +1,7 @@
 # Commutogether
 ## Technology Stack
-- Next.Js
-- Tailwind
+- Next.js
+- Tailwind CSS
 - MUI (UI Component Library)
 ## Style Guide
 - [Style Guide (Figma)](https://www.figma.com/design/8cPdqgIfI33twk0i3of7ld/srid-style-guide?node-id=0-1&t=2jhD0sfafFIxf3Mc-1)
